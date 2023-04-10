@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public class IdRoleUser implements Serializable {
     Long idUser;
-    Long IDRole;
+    Long IdRole;
 }
