@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -13,7 +14,10 @@ import javax.persistence.IdClass;
 @IdClass(IdRoleUser.class)
 public class RoleUser {
     @Id
+    @NotNull
     private Long idUser;
+
+    @NotNull
     @Id
     private Long idRole;
 
