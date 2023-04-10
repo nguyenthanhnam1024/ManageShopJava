@@ -13,7 +13,7 @@ public class Account {
     @Id
     private Long id;
     private String userName;
-    private String PassWork;
+    private String PassWord;
 
     public Account() {
 
