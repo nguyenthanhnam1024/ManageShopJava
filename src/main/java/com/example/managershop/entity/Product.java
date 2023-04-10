@@ -13,8 +13,9 @@ import java.time.LocalDate;
 public class Product {
     @Id
     private Long id;
-    private Long idShop;
+    @Id
     private String name;
+    private Long idShop;
     private float price;
     private String described;
     private LocalDate dateOfManufacture;
