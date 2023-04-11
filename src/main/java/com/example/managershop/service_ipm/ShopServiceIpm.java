@@ -23,4 +23,14 @@ public class ShopServiceIpm implements ShopService {
     public void saveShop(Shop shop) {
         shopRepo.save(shop);
     }
+
+    @Override
+    public void updateShop(Shop shop) {
+        shopRepo.save(shop);
+    }
+
+    @Override
+    public void deleteShop(Long id) {
+        shopRepo.deleteById(id);
+    }
 }

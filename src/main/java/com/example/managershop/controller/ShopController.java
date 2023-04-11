@@ -24,4 +24,14 @@ public class ShopController {
     public void saveShop(@Valid @RequestBody Shop shop) {
         shopService.saveShop(shop);
     }
+
+    @PutMapping("/updateShop")
+    public void updateShop(@Valid @RequestBody Shop shop) {
+        shopService.saveShop(shop);
+    }
+
+    @DeleteMapping("/deleteShop/{id}")
+    public void deleteShop(@PathVariable Long id) {
+        shopService.deleteShop(id);
+    }
 }
