@@ -3,20 +3,21 @@ package com.example.managershop.service_ipm;
 import com.example.managershop.entity.Shop;
 import com.example.managershop.repository.ShopRepo;
 import com.example.managershop.service.ShopService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ShopServiceIpm implements ShopService {
-    @Autowired
-    private ShopRepo shopRepo;
+    private final ShopRepo shopRepo;
+
+    public ShopServiceIpm(ShopRepo shopRepo) {
+        this.shopRepo = shopRepo;
+    }
 
     @Override
     public List<Shop> getAllShop() {
-        List<Shop> listShop = shopRepo.findAll();
-        return listShop;
+        return shopRepo.findAll();
     }
 
     @Override
@@ -36,7 +37,6 @@ public class ShopServiceIpm implements ShopService {
 
     @Override
     public List<Shop> searchShopByKeyword(String keyword) {
-        List<Shop> listShop = shopRepo.findByNameContainingIgnoreCase(keyword);
-        return listShop;
+        return shopRepo.findByNameContainingIgnoreCase(keyword);
     }
 }
