@@ -34,4 +34,10 @@ public class ShopController {
     public void deleteShop(@PathVariable Long id) {
         shopService.deleteShop(id);
     }
+
+    @GetMapping("/searchShopByKeyword/{product}")
+    public List<Shop> searchShopByKeyword(@PathVariable String product) {
+        List<Shop> listShop = shopService.searchShopByKeyword(product);
+        return listShop;
+    }
 }

@@ -20,7 +20,7 @@ public class Shop {
 
     @NotNull
     @Size(min = 2, max = 50)
-    private String ten;
+    private String name;
 
     @NotNull
     @Size(min = 8, max = 60)

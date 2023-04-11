@@ -33,4 +33,10 @@ public class ShopServiceIpm implements ShopService {
     public void deleteShop(Long id) {
         shopRepo.deleteById(id);
     }
+
+    @Override
+    public List<Shop> searchShopByKeyword(String keyword) {
+        List<Shop> listShop = shopRepo.findByNameContainingIgnoreCase(keyword);
+        return listShop;
+    }
 }
