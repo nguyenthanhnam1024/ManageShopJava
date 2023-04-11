@@ -14,6 +14,7 @@ import javax.persistence.IdClass;
 public class RoleUser {
     @Id
     private Long idUser;
+
     @Id
     private Long idRole;
 
