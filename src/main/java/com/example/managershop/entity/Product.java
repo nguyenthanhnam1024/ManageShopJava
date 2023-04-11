@@ -30,7 +30,7 @@ public class Product {
     private float price;
 
     @NotNull
-    @Size(min = 0, max = 1000)
+    @Size(max = 1000)
     private String described;
 
     @NotNull

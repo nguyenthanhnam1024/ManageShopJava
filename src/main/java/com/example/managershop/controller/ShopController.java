@@ -2,7 +2,6 @@ package com.example.managershop.controller;
 
 import com.example.managershop.entity.Shop;
 import com.example.managershop.service.ShopService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -11,13 +10,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/shop")
 public class ShopController {
-    @Autowired
-    private ShopService shopService;
+    private final ShopService shopService;
+
+    public ShopController(ShopService shopService) {
+        this.shopService = shopService;
+    }
 
     @GetMapping("/getAllShop")
     public List<Shop> getAllShop() {
-        List<Shop> listShop = shopService.getAllShop();
-        return listShop;
+        return shopService.getAllShop();
     }
 
     @PostMapping("/saveShop")
@@ -27,7 +28,7 @@ public class ShopController {
 
     @PutMapping("/updateShop")
     public void updateShop(@Valid @RequestBody Shop shop) {
-        shopService.saveShop(shop);
+        shopService.updateShop(shop);
     }
 
     @DeleteMapping("/deleteShop/{id}")
@@ -37,7 +38,6 @@ public class ShopController {
 
     @GetMapping("/searchShopByKeyword")
     public List<Shop> searchShopByKeyword(@RequestParam("keyword") String keyword) {
-        List<Shop> listShop = shopService.searchShopByKeyword(keyword);
-        return listShop;
+        return shopService.searchShopByKeyword(keyword);
     }
 }
