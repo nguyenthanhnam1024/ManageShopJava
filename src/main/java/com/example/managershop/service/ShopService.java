@@ -5,13 +5,13 @@ import com.example.managershop.entity.Shop;
 import java.util.List;
 
 public interface ShopService {
-    public List<Shop> getAllShop();
+    List<Shop> getAllShop();
 
-    public void saveShop(Shop shop);
+    void saveShop(Shop shop);
 
-    public void updateShop(Shop shop);
+    void updateShop(Shop shop);
 
-    public void deleteShop(Long id);
+    void deleteShop(Long id);
 
-    public List<Shop> searchShopByKeyword(String keyword);
+    List<Shop> searchShopByKeyword(String keyword);
 }
