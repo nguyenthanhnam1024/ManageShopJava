@@ -36,8 +36,8 @@ public class ShopController {
     }
 
     @GetMapping("/searchShopByKeyword")
-    public List<Shop> searchShopByKeyword(@RequestParam("keyword") String product) {
-        List<Shop> listShop = shopService.searchShopByKeyword(product);
+    public List<Shop> searchShopByKeyword(@RequestParam("keyword") String keyword) {
+        List<Shop> listShop = shopService.searchShopByKeyword(keyword);
         return listShop;
     }
 }
