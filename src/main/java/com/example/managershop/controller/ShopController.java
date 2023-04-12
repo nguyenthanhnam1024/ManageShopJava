@@ -16,27 +16,27 @@ public class ShopController {
         this.shopService = shopService;
     }
 
-    @GetMapping("/getAllShop")
+    @GetMapping("/getAll")
     public List<Shop> getAllShop() {
         return shopService.getAllShop();
     }
 
-    @PostMapping("/saveShop")
+    @PostMapping("/save")
     public void saveShop(@Valid @RequestBody Shop shop) {
         shopService.saveShop(shop);
     }
 
-    @PutMapping("/updateShop")
+    @PutMapping("/update")
     public void updateShop(@Valid @RequestBody Shop shop) {
         shopService.updateShop(shop);
     }
 
-    @DeleteMapping("/deleteShop/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteShop(@PathVariable Long id) {
         shopService.deleteShop(id);
     }
 
-    @GetMapping("/searchShopByKeyword")
+    @GetMapping("/searchByKeyword")
     public List<Shop> searchShopByKeyword(@RequestParam("keyword") String keyword) {
         return shopService.searchShopByKeyword(keyword);
     }
