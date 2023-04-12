@@ -24,4 +24,14 @@ public class UserServiceIpm implements UserService {
     public void saveUser(User user) {
         userRepo.save(user);
     }
+
+    @Override
+    public void updateUser(User user) {
+        userRepo.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepo.deleteById(id);
+    }
 }

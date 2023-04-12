@@ -16,14 +16,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/getAllUser")
+    @GetMapping("/getAll")
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
 
-    @PostMapping("/saveUser")
+    @PostMapping("/save")
     public void saveUser(@Valid @RequestBody User user) {
         userService.saveUser(user);
     }
 
+    @PutMapping("/update")
+    public void updateUser(@Valid @RequestBody User user) {
+        userService.updateUser(user);
+    }
+
+    @DeleteMapping("delete/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
 }
