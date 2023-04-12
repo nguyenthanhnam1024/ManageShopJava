@@ -24,7 +24,7 @@ public class Account {
 
     @NotNull
     @Size(min = 6, max = 50)
-    private String PassWord;
+    private String password;
 
     public Account() {
 
