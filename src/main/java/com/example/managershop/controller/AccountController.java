@@ -35,4 +35,9 @@ public class AccountController {
     public void deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
     }
+
+    @GetMapping("/searchByKeyword")
+    public List<Account> searchAccountByKeyword(@RequestParam("keyword") String keyword) {
+        return accountService.searchAccountByKeyword(keyword);
+    }
 }

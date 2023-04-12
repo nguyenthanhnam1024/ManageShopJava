@@ -35,4 +35,9 @@ public class AccountServiceIpm implements AccountService {
     public void deleteAccount(Long id) {
         accountRepo.deleteById(id);
     }
+
+    @Override
+    public List<Account> searchAccountByKeyword(String keyword) {
+        return accountRepo.searchAccountByKeyword(keyword);
+    }
 }
