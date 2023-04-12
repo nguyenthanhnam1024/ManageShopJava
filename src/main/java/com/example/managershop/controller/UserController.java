@@ -35,4 +35,9 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
+
+    @GetMapping("/searchByKeyword")
+    public List<User> getAllUser(@RequestParam("keyword") String keyword) {
+        return userService.searchUserByKeyword(keyword);
+    }
 }

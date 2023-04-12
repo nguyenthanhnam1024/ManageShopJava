@@ -34,4 +34,9 @@ public class UserServiceIpm implements UserService {
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
     }
+
+    @Override
+    public List<User> searchUserByKeyword(String keyword) {
+        return userRepo.searchUserByKeyword(keyword);
+    }
 }
