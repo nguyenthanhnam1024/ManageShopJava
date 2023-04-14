@@ -1,19 +1,32 @@
 package com.example.manage_shops.service;
 
-import com.example.manage_shops.entity.Role;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 
-@Component
+@Service
 public class Commons {
     ResponseEntity<?> handleExceptionInBindingResult(BindingResult result) {
             List<ObjectError> errors = result.getAllErrors();
             return ResponseEntity.badRequest().body(errors.stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toArray(String[]::new));
+    }
+
+    void validateRoleId(List<Integer> listRoleId, int roleId) throws ValidationException {
+        boolean valid = false;
+        for (Integer idRole : listRoleId) {
+            if (idRole == roleId) {
+                valid = true;
+                break;
+            }
         }
+        if (!valid) {
+            throw new ValidationException("you no right access");
+        }
+    }
 }
