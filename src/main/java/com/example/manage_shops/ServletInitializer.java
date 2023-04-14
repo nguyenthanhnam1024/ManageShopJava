@@ -1,4 +1,4 @@
-package com.example.managershop;
+package com.example.manage_shops;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

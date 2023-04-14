@@ -1,6 +1,6 @@
-package com.example.managershop.repository;
+package com.example.manage_shops.repository;
 
-import com.example.managershop.entity.Product;
+import com.example.manage_shops.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

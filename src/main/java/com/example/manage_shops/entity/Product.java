@@ -1,4 +1,4 @@
-package com.example.managershop.entity;
+package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
