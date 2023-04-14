@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ShopRepo extends JpaRepository<Shop, Long> {
+public interface ShopRepo extends JpaRepository<Shop, Integer> {
     List<Shop> findByNameContainingIgnoreCase(String keyword);
 }

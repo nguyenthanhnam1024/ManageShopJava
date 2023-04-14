@@ -19,17 +19,17 @@ public class DeliveryBill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "no product")
     private Long idProduct;
 
-    @NotNull
-    private Long idShop;
+    @NotNull(message = "shop must other null")
+    private int idShop;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "quantity must other null")
+    @Min(value = 1, message = "quantity must be greater than 1")
     private Integer quantity;
 
-    @NotNull
+    @NotNull(message = "date export must other null")
     private LocalDate dateExport;
 
     public DeliveryBill() {
