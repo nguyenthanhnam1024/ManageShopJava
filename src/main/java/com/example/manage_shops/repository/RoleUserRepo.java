@@ -1,7 +1,7 @@
-package com.example.managershop.repository;
+package com.example.manage_shops.repository;
 
-import com.example.managershop.entity.IdRoleUser;
-import com.example.managershop.entity.RoleUser;
+import com.example.manage_shops.entity.IdRoleUser;
+import com.example.manage_shops.entity.RoleUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

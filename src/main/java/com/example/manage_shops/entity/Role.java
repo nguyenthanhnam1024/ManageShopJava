@@ -1,4 +1,4 @@
-package com.example.managershop.entity;
+package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,20 +13,16 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @AllArgsConstructor
-public class Account {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @NotNull
-    @Size(min = 2, max = 50)
-    private String userName;
+    @NotNull(message = "role must other null")
+    @Size(min = 1, max = 15, message = "0 keyword < origin < 16 keyword")
+    private String role;
 
-    @NotNull
-    @Size(min = 6, max = 50)
-    private String PassWord;
-
-    public Account() {
+    public Role() {
 
     }
 }

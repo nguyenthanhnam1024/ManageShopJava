@@ -1,4 +1,4 @@
-package com.example.managershop.entity;
+package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,29 +14,25 @@ import java.time.LocalDate;
 @Entity
 @Data
 @AllArgsConstructor
-public class Receipt {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private LocalDate dateAdded;
+    @NotNull(message = "no date create order")
+    private LocalDate date;
 
-    @NotNull
-    private Long idShop;
+    @NotNull(message = "shop must other null")
+    private int idShop;
 
-    @NotNull
+    @NotNull(message = "product must other null")
     private Long idProduct;
 
-    @NotNull
-    @Min(1)
-    private Integer quantity;
+    @NotNull(message = "quantity must other null")
+    @Min(value = 1, message = "quantity must be greater than 1")
+    private float quantity;
 
-    @NotNull
-    @Min(0)
-    private float price;
-
-    public Receipt() {
+    public Order() {
 
     }
 }
