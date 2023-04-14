@@ -18,11 +18,11 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "user name is null")
     @Size(min = 2, max = 50)
     private String userName;
 
-    @NotNull
+    @NotNull(message = "password is null")
     @Size(min = 6, max = 50)
     private String PassWord;
 
