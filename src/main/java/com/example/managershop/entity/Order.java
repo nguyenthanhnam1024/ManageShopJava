@@ -19,17 +19,17 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "no date create order")
     private LocalDate date;
 
-    @NotNull
-    private Long idShop;
+    @NotNull(message = "shop must other null")
+    private int idShop;
 
-    @NotNull
+    @NotNull(message = "product must other null")
     private Long idProduct;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "quantity must other null")
+    @Min(value = 1, message = "quantity must be greater than 1")
     private float quantity;
 
     public Order() {

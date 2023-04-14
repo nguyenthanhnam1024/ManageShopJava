@@ -19,29 +19,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long idShop;
+    @NotNull(message = "role must other null")
+    private int idShop;
 
-    @NotNull
+    @NotNull(message = "role must other null")
     private Long idAccount;
 
-    @NotNull
+    @NotNull(message = "role must other null")
     @Size(min = 2, max = 50)
     private String name;
 
-    @NotNull
+    @NotNull(message = "role must other null")
     private int age;
 
-    @NotNull
-    @Email
+    @NotNull(message = "role must other null")
+    @Email(message = "email ")
     private String email;
 
-    @NotNull
-    @Size(min = 10, max = 15)
+    @NotNull(message = "role must other null")
+    @Size(min = 10, max = 15, message = "9 keyword < origin < 16 keyword")
     private String phoneNumber;
 
-    @NotNull
-    @Size(min = 8, max = 60)
+    @NotNull(message = "role must other null")
+    @Size(min = 8, max = 60, message = "7 keyword < origin < 61 keyword")
     private String address;
 
     public User() {

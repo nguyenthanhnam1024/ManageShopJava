@@ -16,14 +16,14 @@ import javax.validation.constraints.Size;
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @NotNull
-    @Size(min = 2, max = 50)
+    @NotNull(message = "role must other null")
+    @Size(min = 2, max = 50, message = "1 keyword < origin < 51 keyword")
     private String name;
 
     @NotNull
-    @Size(min = 8, max = 60)
+    @Size(min = 8, max = 60, message = "7 keyword < origin < 61 keyword")
     private String address;
 
     public Shop() {

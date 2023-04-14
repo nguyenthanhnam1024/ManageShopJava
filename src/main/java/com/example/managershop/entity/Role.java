@@ -16,10 +16,10 @@ import javax.validation.constraints.Size;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @NotNull
-    @Size(min = 1, max = 15)
+    @NotNull(message = "role must other null")
+    @Size(min = 1, max = 15, message = "0 keyword < origin < 16 keyword")
     private String role;
 
     public Role() {

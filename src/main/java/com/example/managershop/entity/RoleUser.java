@@ -16,7 +16,7 @@ public class RoleUser {
     private Long idUser;
 
     @Id
-    private Long idRole;
+    private int idRole;
 
     public RoleUser() {
 

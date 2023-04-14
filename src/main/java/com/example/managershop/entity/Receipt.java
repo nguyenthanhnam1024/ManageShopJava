@@ -19,21 +19,20 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "data added must other null")
     private LocalDate dateAdded;
 
-    @NotNull
-    private Long idShop;
+    @NotNull(message = "shop must other null")
+    private int idShop;
 
-    @NotNull
+    @NotNull(message = "product must other null")
     private Long idProduct;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "quantity must other null")
+    @Min(value = 1, message = "quantity must be greater than 0")
     private Integer quantity;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "price must other null")
     private float price;
 
     public Receipt() {
