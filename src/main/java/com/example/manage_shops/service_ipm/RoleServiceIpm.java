@@ -26,4 +26,8 @@ public class RoleServiceIpm implements RoleService {
             throw new IllegalArgumentException("unknown role of user", ex);
         }
     }
+
+    @Override
+    public void saveRole(Role role) {
+    }
 }

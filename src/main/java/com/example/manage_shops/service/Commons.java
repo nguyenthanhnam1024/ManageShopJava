@@ -1,5 +1,6 @@
 package com.example.manage_shops.service;
 
+import com.example.manage_shops.entity.Role;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
