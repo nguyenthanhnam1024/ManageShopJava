@@ -8,9 +8,15 @@ import javax.xml.bind.ValidationException;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getAllProductByIdShop(int idShop);
+    List<ProductDTO> getAllProductByIdShop(int idShop);
 
-    ResponseEntity<?> saveProduct(Product product) throws ValidationException;
+    String saveProduct(Product product) throws ValidationException;
+
+    ResponseEntity<?> deleteProduct(Long id);
+
+    List<ProductDTO> searchProductByKeyword(String keyword);
 
     ProductDTO mapIntoProductDTO(Product product);
+
+    List<ProductDTO> mapListProductCrossListProductDTO(List<Product> listProduct);
 }

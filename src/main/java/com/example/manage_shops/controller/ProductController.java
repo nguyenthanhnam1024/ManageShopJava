@@ -41,4 +41,14 @@ public class ProductController {
         }
         return ResponseEntity.ok(productService.saveProduct(product));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public  ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.deleteProduct(id));
+    }
+
+    @GetMapping("/searchProductByKeyword")
+    public ResponseEntity<?> searchProductByKeyword(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(productService.searchProductByKeyword(keyword));
+    }
 }

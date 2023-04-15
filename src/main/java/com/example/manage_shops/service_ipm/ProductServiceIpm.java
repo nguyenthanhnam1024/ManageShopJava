@@ -16,6 +16,8 @@ import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceIpm implements ProductService {
@@ -31,25 +33,40 @@ public class ProductServiceIpm implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProductByIdShop(int idShop) {
-        return productRepo.findAllByIdShop(idShop);
+    public List<ProductDTO> getAllProductByIdShop(int idShop) {
+        return this.mapListProductCrossListProductDTO(productRepo.findAllByIdShop(idShop));
     }
 
     @Override
-    public ResponseEntity<?> saveProduct(Product product) throws ValidationException {
+    public String saveProduct(Product product) throws ValidationException {
         Product product1 = productRepo.findProductByName(product.getName());
         if (product1.getName().equals(product.getName()) && product1.getIdShop() == product.getIdShop()) {
-            return ResponseEntity.badRequest().body("have been product name in shop:"+product1.getName());
+            return "have been product name in shop:"+product1.getName();
         }
         if (product.getPrice() <= 0) {
-            return ResponseEntity.badRequest().body("price must > 0");
+            return "price must > 0";
         }
         List<Integer> listRoleId = new ArrayList<>();
         listRoleId.add(1);
         listRoleId.add(2);
         int roleId = product.getIdShop();
         commons.validateRoleId(listRoleId, roleId);
-        return ResponseEntity.ok(this.mapIntoProductDTO(productRepo.save(product)));
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> deleteProduct(Long id) {
+        Optional<Product> opProduct = productRepo.findById(id);
+        if (opProduct.isPresent()) {
+            productRepo.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public List<ProductDTO> searchProductByKeyword(String keyword) {
+        return this.mapListProductCrossListProductDTO(productRepo.findByNameContainingIgnoreCase(keyword));
     }
 
     public ProductDTO mapIntoProductDTO(Product product) {
@@ -64,5 +81,10 @@ public class ProductServiceIpm implements ProductService {
                     return productDTO;
                 });
         return modelMapper.map(product, ProductDTO.class);
+    }
+
+    @Override
+    public List<ProductDTO> mapListProductCrossListProductDTO(List<Product> listProduct) {
+        return listProduct.stream().map(this::mapIntoProductDTO).collect(Collectors.toList());
     }
 }
