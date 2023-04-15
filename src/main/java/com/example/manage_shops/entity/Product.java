@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -31,6 +32,7 @@ public class Product {
     private String described;
 
     @NotNull(message = "dataOfManufacture must other null")
+    @PastOrPresent(message = "date must be present or past")
     private LocalDate dateOfManufacture;
 
     @NotNull(message = "expiry must other null")

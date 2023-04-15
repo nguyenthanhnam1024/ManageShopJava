@@ -11,13 +11,13 @@ import java.util.List;
 
 @Service
 public class Commons {
-    ResponseEntity<?> handleExceptionInBindingResult(BindingResult result) {
+    public ResponseEntity<?> handleExceptionInBindingResult(BindingResult result) {
             List<ObjectError> errors = result.getAllErrors();
             return ResponseEntity.badRequest().body(errors.stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toArray(String[]::new));
     }
 
-    void validateRoleId(List<Integer> listRoleId, int roleId) throws ValidationException {
+    public void validateRoleId(List<Integer> listRoleId, int roleId) throws ValidationException {
         boolean valid = false;
         for (Integer idRole : listRoleId) {
             if (idRole == roleId) {
