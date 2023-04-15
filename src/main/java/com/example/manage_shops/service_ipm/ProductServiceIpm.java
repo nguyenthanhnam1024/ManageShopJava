@@ -38,8 +38,8 @@ public class ProductServiceIpm implements ProductService {
     @Override
     public ResponseEntity<?> saveProduct(Product product) throws ValidationException {
         Product product1 = productRepo.findProductByName(product.getName());
-        if (product1 != null) {
-            return ResponseEntity.badRequest().body("have been product name :"+product1.getName());
+        if (product1.getName().equals(product.getName()) && product1.getIdShop() == product.getIdShop()) {
+            return ResponseEntity.badRequest().body("have been product name in shop:"+product1.getName());
         }
         if (product.getPrice() <= 0) {
             return ResponseEntity.badRequest().body("price must > 0");

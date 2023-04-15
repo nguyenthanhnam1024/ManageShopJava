@@ -34,4 +34,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.saveProduct(product));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product, BindingResult result) throws ValidationException {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(commons.handleExceptionInBindingResult(result));
+        }
+        return ResponseEntity.ok(productService.saveProduct(product));
+    }
 }
