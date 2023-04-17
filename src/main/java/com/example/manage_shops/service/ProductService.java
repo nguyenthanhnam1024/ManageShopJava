@@ -3,11 +3,10 @@ package com.example.manage_shops.service;
 import com.example.manage_shops.dto.ProductDTO;
 import com.example.manage_shops.entity.Product;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
 public interface ProductService {
-    List<ProductDTO> getAllProductByIdShop(int idShop);
+    List<ProductDTO> getProductByIdShop(int idShop);
 
     String validateRoleAdminAndManege(int roleId);
 

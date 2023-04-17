@@ -28,7 +28,7 @@ public class ProductServiceIpm implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> getAllProductByIdShop(int idShop) {
+    public List<ProductDTO> getProductByIdShop(int idShop) {
         List<Product> productList = productRepo.findProductByIdShop(idShop);
         if (productList == null) {
             return null;
@@ -48,11 +48,13 @@ public class ProductServiceIpm implements ProductService {
     @Override
     public String saveProduct(Product product) {
         Product productExist = productRepo.findProductByName(product.getName());
-        if (productExist.getName().equals(product.getName()) && productExist.getIdShop() == product.getIdShop()) {
-            return "have been product name in shop:"+productExist.getName();
-        }
-        if (product.getPrice() <= 0) {
-            return "price must > 0";
+        if (productExist != null) {
+            if (productExist.getName().equals(product.getName()) && productExist.getIdShop() == product.getIdShop()) {
+                return "have been product name in shop:"+productExist.getName();
+            }
+            if (product.getPrice() <= 0) {
+                return "price must > 0";
+            }
         }
         String message = this.validateRoleAdminAndManege(product.getIdShop());
         if (message == null) {
@@ -80,18 +82,17 @@ public class ProductServiceIpm implements ProductService {
         return this.mapListProductCrossListProductDTO(productList);
     }
 
-    public ProductDTO mapIntoProductDTO(Product product) {
+    @Override
+    public ProductDTO mapIntoProductDTO(Product productRequest) {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.typeMap(Product.class, ProductDTO.class)
-                .setConverter(MappingContext -> {
-                    Product product1 = MappingContext.getSource();
-                    ProductDTO productDTO = MappingContext.getDestination();
-                    Shop shop = shopRepo.findById(product1.getIdShop())
-                            .orElseThrow(() -> new NoSuchElementException("unregister shop for product"));
-                    productDTO.setShop(shop);
-                    return productDTO;
-                });
-        return modelMapper.map(product, ProductDTO.class);
+        Optional<Shop> opShop = shopRepo.findById(productRequest.getIdShop());
+        Shop shop = new Shop();
+        if (opShop.isPresent()) {
+            shop = opShop.get();
+        }
+        ProductDTO productDTO = modelMapper.map(productRequest, ProductDTO.class);
+        productDTO.setShop(shop);
+        return productDTO;
     }
 
     @Override

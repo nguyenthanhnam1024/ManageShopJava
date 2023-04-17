@@ -22,7 +22,7 @@ public class ProductController {
 
     @GetMapping("/getByIdShop/{idShop}")
     public ResponseEntity<?> getProductByIdShop(@PathVariable int idShop) {
-        return ResponseEntity.ok(productService.getAllProductByIdShop(idShop));
+        return ResponseEntity.ok(productService.getProductByIdShop(idShop));
     }
 
     @PostMapping("/save")
