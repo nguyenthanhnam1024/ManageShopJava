@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
 @Service
@@ -17,16 +16,12 @@ public class Commons {
                     .toArray(String[]::new));
     }
 
-    public void validateRoleId(List<Integer> listRoleId, int roleId) throws ValidationException {
-        boolean valid = false;
+    public String validateRoleId(List<Integer> listRoleId, int roleId) {
         for (Integer idRole : listRoleId) {
             if (idRole == roleId) {
-                valid = true;
-                break;
+                return null;
             }
         }
-        if (!valid) {
-            throw new ValidationException("you no right access");
-        }
+        return "you no right access";
     }
 }

@@ -9,14 +9,9 @@ import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.ValidationException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,39 +29,55 @@ public class ProductServiceIpm implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProductByIdShop(int idShop) {
-        return this.mapListProductCrossListProductDTO(productRepo.findAllByIdShop(idShop));
+        List<Product> productList = productRepo.findProductByIdShop(idShop);
+        if (productList == null) {
+            return null;
+        }
+        Collections.reverse(productList);
+        return this.mapListProductCrossListProductDTO(productList);
     }
 
     @Override
-    public String saveProduct(Product product) throws ValidationException {
-        Product product1 = productRepo.findProductByName(product.getName());
-        if (product1.getName().equals(product.getName()) && product1.getIdShop() == product.getIdShop()) {
-            return "have been product name in shop:"+product1.getName();
+    public String validateRoleAdminAndManege(int roleId) {
+        List<Integer> listRoleId = new ArrayList<>();
+        listRoleId.add(1);
+        listRoleId.add(2);
+        return commons.validateRoleId(listRoleId, roleId);
+    }
+
+    @Override
+    public String saveProduct(Product product) {
+        Product productExist = productRepo.findProductByName(product.getName());
+        if (productExist.getName().equals(product.getName()) && productExist.getIdShop() == product.getIdShop()) {
+            return "have been product name in shop:"+productExist.getName();
         }
         if (product.getPrice() <= 0) {
             return "price must > 0";
         }
-        List<Integer> listRoleId = new ArrayList<>();
-        listRoleId.add(1);
-        listRoleId.add(2);
-        int roleId = product.getIdShop();
-        commons.validateRoleId(listRoleId, roleId);
-        return null;
+        String message = this.validateRoleAdminAndManege(product.getIdShop());
+        if (message == null) {
+            productRepo.save(product);
+        }
+        return message;
     }
 
     @Override
-    public ResponseEntity<?> deleteProduct(Long id) {
+    public String deleteProduct(Long id) {
         Optional<Product> opProduct = productRepo.findById(id);
         if (opProduct.isPresent()) {
             productRepo.deleteById(id);
-            return ResponseEntity.ok().build();
+            return null;
         }
-        return ResponseEntity.notFound().build();
+        return "product no exist in database";
     }
 
     @Override
     public List<ProductDTO> searchProductByKeyword(String keyword) {
-        return this.mapListProductCrossListProductDTO(productRepo.findByNameContainingIgnoreCase(keyword));
+        List<Product> productList = productRepo.findByNameContainingIgnoreCase(keyword);
+        if (productList == null) {
+            return null;
+        }
+        return this.mapListProductCrossListProductDTO(productList);
     }
 
     public ProductDTO mapIntoProductDTO(Product product) {

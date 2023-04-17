@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.xml.bind.ValidationException;
 
 @RestController
 @RequestMapping("/product")
@@ -21,13 +20,13 @@ public class ProductController {
         this.commons = commons;
     }
 
-    @GetMapping("/getAllByIdShop/{idShop}")
-    public ResponseEntity<?> getAllProductByIdShop(@PathVariable int idShop) {
+    @GetMapping("/getByIdShop/{idShop}")
+    public ResponseEntity<?> getProductByIdShop(@PathVariable int idShop) {
         return ResponseEntity.ok(productService.getAllProductByIdShop(idShop));
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveProduct(@Valid @RequestBody Product product, BindingResult result) throws ValidationException {
+    public ResponseEntity<?> saveProduct(@Valid @RequestBody Product product, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(commons.handleExceptionInBindingResult(result));
         }
@@ -35,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product, BindingResult result) throws ValidationException {
+    public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(commons.handleExceptionInBindingResult(result));
         }

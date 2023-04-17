@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
-    List<Product> findAllByIdShop(int idShop);
+    List<Product> findProductByIdShop(int idShop);
 
     Product findProductByName(String productName);
 
