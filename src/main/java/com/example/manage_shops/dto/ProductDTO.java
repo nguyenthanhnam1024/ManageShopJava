@@ -1,6 +1,5 @@
 package com.example.manage_shops.dto;
 
-import com.example.manage_shops.entity.Shop;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ public class ProductDTO {
 
     private String name;
 
-    private Shop shop;
+    private int idShop;
 
     private float price;
 

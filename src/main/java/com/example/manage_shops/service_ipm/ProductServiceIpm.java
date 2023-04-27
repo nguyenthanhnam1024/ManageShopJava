@@ -2,9 +2,8 @@ package com.example.manage_shops.service_ipm;
 
 import com.example.manage_shops.dto.ProductDTO;
 import com.example.manage_shops.entity.Product;
-import com.example.manage_shops.entity.Shop;
+import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.repository.ProductRepo;
-import com.example.manage_shops.repository.ShopRepo;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.ProductService;
 import org.modelmapper.ModelMapper;
@@ -18,23 +17,30 @@ import java.util.stream.Collectors;
 public class ProductServiceIpm implements ProductService {
     private final ProductRepo productRepo;
     private final Commons commons;
-    private final ShopRepo shopRepo;
 
     @Autowired
-    public ProductServiceIpm(ProductRepo productRepo, Commons commons, ShopRepo shopRepo) {
+    public ProductServiceIpm(ProductRepo productRepo, Commons commons) {
         this.productRepo = productRepo;
         this.commons = commons;
-        this.shopRepo = shopRepo;
     }
 
     @Override
-    public List<ProductDTO> getProductByIdShop(int idShop) {
+    public List<ProductDTO> getProductByIdShop(int idShop) throws MyValidateException {
         List<Product> productList = productRepo.findProductByIdShop(idShop);
         if (productList == null) {
-            return null;
+            throw new MyValidateException("shop no have product exits");
         }
         Collections.reverse(productList);
         return this.mapListProductCrossListProductDTO(productList);
+    }
+
+    @Override
+    public ProductDTO getProductById(Long id) throws MyValidateException {
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isPresent()) {
+            return this.mapIntoProductDTO(product.get());
+        }
+        throw  new MyValidateException("undefine this product");
     }
 
     @Override
@@ -46,38 +52,54 @@ public class ProductServiceIpm implements ProductService {
     }
 
     @Override
-    public String saveProduct(Product product) {
-        Product productExist = productRepo.findProductByName(product.getName());
-        if (productExist != null) {
-            if (productExist.getName().equals(product.getName()) && productExist.getIdShop() == product.getIdShop()) {
-                return "have been product name in shop:"+productExist.getName();
-            }
-            if (product.getPrice() <= 0) {
-                return "price must > 0";
-            }
-        }
+    public ProductDTO saveProduct(Product product) throws MyValidateException {
         String message = this.validateRoleAdminAndManege(product.getIdShop());
         if (message == null) {
-            productRepo.save(product);
+            Product productExist = productRepo.findProductByName(product.getName());
+            if (productExist != null) {
+                    throw  new MyValidateException("shop have been product '"+productExist.getName()+"'");
+            }
+            return this.mapIntoProductDTO(productRepo.save(product));
         }
-        return message;
+        throw  new MyValidateException(message);
     }
 
     @Override
-    public String deleteProduct(Long id) {
-        Optional<Product> opProduct = productRepo.findById(id);
-        if (opProduct.isPresent()) {
-            productRepo.deleteById(id);
-            return null;
+    public ProductDTO updateProduct(Product product) throws MyValidateException {
+        String message = this.validateRoleAdminAndManege(product.getIdShop());
+        if (message == null) {
+            Optional<Product> opProduct = productRepo.findById(product.getId());
+            if (!opProduct.isPresent()) {
+                throw  new MyValidateException("shop have been this product");
+            }
+            return this.mapIntoProductDTO(productRepo.save(product));
         }
-        return "product no exist in database";
+        throw  new MyValidateException(message);
     }
 
     @Override
-    public List<ProductDTO> searchProductByKeyword(String keyword) {
+    public ProductDTO deleteProduct(Long id, int idShop) throws MyValidateException {
+        String message = this.validateRoleAdminAndManege(idShop);
+        if (message == null) {
+            Optional<Product> opProduct = productRepo.findById(id);
+            if (opProduct.isPresent()) {
+                try {
+                    productRepo.deleteById(id);
+                    return this.mapIntoProductDTO(opProduct.get());
+                } catch (Exception ex) {
+                    throw  new MyValidateException("can not delete. Error server");
+                }
+            }
+            throw  new MyValidateException("product no exist in database");
+        }
+        throw  new MyValidateException(message);
+    }
+
+    @Override
+    public List<ProductDTO> searchProductByKeyword(String keyword) throws MyValidateException {
         List<Product> productList = productRepo.findByNameContainingIgnoreCase(keyword);
         if (productList == null) {
-            return null;
+            throw new MyValidateException("shop no have product name : "+keyword);
         }
         return this.mapListProductCrossListProductDTO(productList);
     }
@@ -85,14 +107,7 @@ public class ProductServiceIpm implements ProductService {
     @Override
     public ProductDTO mapIntoProductDTO(Product productRequest) {
         ModelMapper modelMapper = new ModelMapper();
-        Optional<Shop> opShop = shopRepo.findById(productRequest.getIdShop());
-        Shop shop = new Shop();
-        if (opShop.isPresent()) {
-            shop = opShop.get();
-        }
-        ProductDTO productDTO = modelMapper.map(productRequest, ProductDTO.class);
-        productDTO.setShop(shop);
-        return productDTO;
+        return modelMapper.map(productRequest, ProductDTO.class);
     }
 
     @Override

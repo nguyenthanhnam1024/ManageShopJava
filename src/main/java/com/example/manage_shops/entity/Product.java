@@ -6,9 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
@@ -19,13 +17,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "name product is null")
+    @NotBlank(message = "name product must other null")
     private String name;
 
     @NotNull(message = "shop must other null")
     private int idShop;
 
     @NotNull(message = "price must other null")
+    @Min(value = 1, message = "price must be large or equal 1")
     private float price;
 
     @Size(max = 1000, message = "described must be less 1000 keyword")
@@ -36,6 +35,7 @@ public class Product {
     private LocalDate dateOfManufacture;
 
     @NotNull(message = "expiry must other null")
+    @FutureOrPresent(message = "date must be present or future")
     private LocalDate expiry;
 
     @NotNull(message = "origin must other null")
