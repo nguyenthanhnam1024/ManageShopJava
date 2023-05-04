@@ -56,7 +56,6 @@ public class RoleServiceIpm implements RoleService {
             throw new MyValidateException("role name have been exist");
         }
         throw new MyValidateException(message);
-
     }
 
     @Override
@@ -70,7 +69,6 @@ public class RoleServiceIpm implements RoleService {
             throw new MyValidateException("can't found this role in database to update");
         }
         throw new MyValidateException(message);
-
     }
 
     @Override
@@ -85,7 +83,6 @@ public class RoleServiceIpm implements RoleService {
             return this.mapIntoRoleDTO(opRole.get());
         }
         throw new MyValidateException(message);
-
     }
 
     @Override

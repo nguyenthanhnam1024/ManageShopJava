@@ -26,6 +26,9 @@ public class Shop {
     @Size(min = 8, max = 60, message = "7 keyword < origin < 61 keyword")
     private String address;
 
+    @Size(max = 14, message = "hotline must be < 15 number")
+    private String hotline;
+
     public Shop() {
 
     }
