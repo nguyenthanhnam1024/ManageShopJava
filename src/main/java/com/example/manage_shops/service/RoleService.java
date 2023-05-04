@@ -7,8 +7,6 @@ import com.example.manage_shops.exception.MyValidateException;
 import java.util.List;
 
 public interface RoleService {
-    String validateRole(int roleId);
-
     List<RoleDTO> getAllRole(int roleIdOfUser) throws MyValidateException;
 
     RoleDTO getRoleById(int roleId, int roleIdOfUser) throws MyValidateException;

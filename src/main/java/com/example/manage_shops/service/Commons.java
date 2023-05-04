@@ -1,6 +1,7 @@
 package com.example.manage_shops.service;
 
 import com.example.manage_shops.entity.Role;
+import com.example.manage_shops.my_enum.RoleEnum;
 import com.example.manage_shops.repository.RoleRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -30,16 +31,26 @@ public class Commons {
         return errorValidateMap;
     }
 
-    public String validateRoleId(List<Integer> listRoleId, int roleId) {
-        Optional<Role> roleOptional = roleRepo.findById(roleId);
+    public String validateRoleId(List<Integer> listRoleId, int roleIdOfUser) {
+        Optional<Role> roleOptional = roleRepo.findById(roleIdOfUser);
         if (!roleOptional.isPresent()) {
-            return "this role of you no exist";
+            return "role of you no exist";
         }
         for (Integer idRole : listRoleId) {
-            if (idRole == roleId) {
+            if (idRole == roleIdOfUser) {
                 return null;
             }
         }
+        return "you no right access";
+    }
+
+    public String onlyValidateRoleForADMIN(int roleIdOfUser) {
+        Optional<Role> roleOptional = roleRepo.findById(roleIdOfUser);
+        if (!roleOptional.isPresent()) {
+            return "you no have role ADMIN";
+        }
+        if (RoleEnum.ADMIN.getIdRole() == roleIdOfUser) {
+            return null; }
         return "you no right access";
     }
 }

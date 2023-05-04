@@ -20,14 +20,14 @@ public class RoleController {
     }
 
     @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
-    @GetMapping("/getAll/{roleId}")
-    public ResponseEntity<?> getAllRole(@PathVariable int roleId) throws MyValidateException {
-        return ResponseEntity.ok(roleService.getAllRole(roleId));
+    @GetMapping("/getAll/{roleIdUser}")
+    public ResponseEntity<?> getAllRole(@PathVariable int roleIdUser) throws MyValidateException {
+        return ResponseEntity.ok(roleService.getAllRole(roleIdUser));
     }
 
     @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
-    @GetMapping("/getAll/{roleId}/{roleIdUser}")
-    public ResponseEntity<?> getAllRole(@PathVariable int roleId, @PathVariable int roleIdUser) throws MyValidateException {
+    @GetMapping("/getRoleById/{roleId}/{roleIdUser}")
+    public ResponseEntity<?> getRoleById(@PathVariable int roleId, @PathVariable int roleIdUser) throws MyValidateException {
         return ResponseEntity.ok(roleService.getRoleById(roleId, roleIdUser));
     }
 

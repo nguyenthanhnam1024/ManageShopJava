@@ -3,14 +3,12 @@ package com.example.manage_shops.service_ipm;
 import com.example.manage_shops.dto.RoleDTO;
 import com.example.manage_shops.entity.Role;
 import com.example.manage_shops.exception.MyValidateException;
-import com.example.manage_shops.my_enum.RoleEnum;
 import com.example.manage_shops.repository.RoleRepo;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,18 +24,8 @@ public class RoleServiceIpm implements RoleService {
     }
 
     @Override
-    public String validateRole(int roleId){
-        List<Integer> roleIdList = new ArrayList<>();
-        for (RoleEnum Role : RoleEnum.values()) {
-            int name = Role.getIdRole();
-            roleIdList.add(name);
-        }
-        return commons.validateRoleId(roleIdList, roleId);
-    }
-
-    @Override
     public List<RoleDTO> getAllRole(int roleIdOfUser) throws MyValidateException {
-        String message = this.validateRole(roleIdOfUser);
+        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
         if (message == null) {
             return this.mapIntoListRoleDTO(roleRepo.findAll());
         }
@@ -46,7 +34,7 @@ public class RoleServiceIpm implements RoleService {
 
     @Override
     public RoleDTO getRoleById(int roleId, int roleIdOfUser) throws MyValidateException {
-        String message = this.validateRole(roleIdOfUser);
+        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
         if (message == null) {
             Optional<Role> roleExist = roleRepo.findById(roleId);
             if (roleExist.isPresent()) {
@@ -59,9 +47,9 @@ public class RoleServiceIpm implements RoleService {
 
     @Override
     public RoleDTO saveRole(Role role, int roleIdOfUser) throws MyValidateException {
-        String message = this.validateRole(roleIdOfUser);
+        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
         if (message == null) {
-            Optional<Role> roleExist = roleRepo.findByRole(role.getRole());
+            Optional<Role> roleExist = roleRepo.findByRoleName(role.getRoleName());
             if (!roleExist.isPresent()) {
                 return this.mapIntoRoleDTO(roleRepo.save(role));
             }
@@ -73,7 +61,7 @@ public class RoleServiceIpm implements RoleService {
 
     @Override
     public RoleDTO updateRole(Role role, int roleIdOfUser) throws MyValidateException {
-        String message = this.validateRole(roleIdOfUser);
+        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
         if (message == null) {
             Optional<Role> roleExist = roleRepo.findById(role.getId());
             if (roleExist.isPresent()) {
@@ -87,7 +75,7 @@ public class RoleServiceIpm implements RoleService {
 
     @Override
     public RoleDTO deleteRole(int roleId, int roleIdOfUser) throws MyValidateException {
-        String message = this.validateRole(roleIdOfUser);
+        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
         if (message == null) {
             Optional<Role> opRole = roleRepo.findById(roleId);
             if (!opRole.isPresent()) {
