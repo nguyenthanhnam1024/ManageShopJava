@@ -20,19 +20,16 @@ public class ProductController {
         this.commons = commons;
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @GetMapping("/getByIdShop/{idShop}")
     public ResponseEntity<?> getProductByIdShop(@PathVariable int idShop) throws MyValidateException {
         return ResponseEntity.ok(productService.getProductByIdShop(idShop));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @GetMapping("/getById/{id}")
     public ResponseEntity<?> getProductByIdShop(@PathVariable Long id) throws MyValidateException {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @PostMapping("/save")
     public ResponseEntity<?> saveProduct(@Valid @RequestBody Product product, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
@@ -41,7 +38,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.saveProduct(product));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @PutMapping("/update")
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
@@ -50,13 +46,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(product));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @DeleteMapping("/delete/{id}/{idShop}")
     public  ResponseEntity<?> deleteProduct(@PathVariable Long id, @PathVariable int idShop) throws MyValidateException {
         return ResponseEntity.ok(productService.deleteProduct(id, idShop));
     }
-
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
+    
     @GetMapping("/searchProductByKeyword")
     public ResponseEntity<?> searchProductByKeyword(@RequestParam("keyword") String keyword) throws MyValidateException {
         return ResponseEntity.ok(productService.searchProductByKeyword(keyword));
