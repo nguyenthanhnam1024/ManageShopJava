@@ -19,19 +19,16 @@ public class RoleController {
         this.commons = commons;
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @GetMapping("/getAll/{roleIdUser}")
     public ResponseEntity<?> getAllRole(@PathVariable int roleIdUser) throws MyValidateException {
         return ResponseEntity.ok(roleService.getAllRole(roleIdUser));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @GetMapping("/getRoleById/{roleId}/{roleIdUser}")
     public ResponseEntity<?> getRoleById(@PathVariable int roleId, @PathVariable int roleIdUser) throws MyValidateException {
         return ResponseEntity.ok(roleService.getRoleById(roleId, roleIdUser));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @PostMapping("/save/{roleIdUser}")
     public ResponseEntity<?> saveRole(@RequestBody Role role, @PathVariable int roleIdUser, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
@@ -40,7 +37,6 @@ public class RoleController {
         return ResponseEntity.ok(roleService.saveRole(role, roleIdUser));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @PutMapping("/update/{roleIdUser}")
     public ResponseEntity<?> updateRole(@RequestBody Role role, @PathVariable int roleIdUser, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
@@ -49,7 +45,6 @@ public class RoleController {
         return ResponseEntity.ok(roleService.updateRole(role, roleIdUser));
     }
 
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 36000000L)
     @DeleteMapping("/delete/{roleId}/{roleIdUser}")
     public ResponseEntity<?> deleteRole(@PathVariable int roleId, @PathVariable int roleIdUser) throws MyValidateException{
         return ResponseEntity.ok(roleService.deleteRole(roleId, roleIdUser));
