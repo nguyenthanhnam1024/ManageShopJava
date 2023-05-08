@@ -20,7 +20,7 @@ public class Role {
 
     @NotNull(message = "role must other null")
     @Size(min = 1, max = 15, message = "0 keyword < origin < 16 keyword")
-    private String role;
+    private String roleName;
 
     public Role() {
 

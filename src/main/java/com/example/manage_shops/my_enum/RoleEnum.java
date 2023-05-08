@@ -1,12 +1,12 @@
-package com.example.manage_shops.repository;
+package com.example.manage_shops.my_enum;
 
 public enum RoleEnum {
     ADMIN(1, "ADMIN"),
     MANAGE(2, "MANAGE"),
     STAFF(3, "STAFF");
 
-    private int idRole;
-    private String roleName;
+    private final int idRole;
+    private final String roleName;
 
     RoleEnum(int idRole, String roleName) {
         this.idRole = idRole;
@@ -17,15 +17,7 @@ public enum RoleEnum {
         return idRole;
     }
 
-    public void setIdRole(int idRole) {
-        this.idRole = idRole;
-    }
-
     public String getRoleName() {
         return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
     }
 }
