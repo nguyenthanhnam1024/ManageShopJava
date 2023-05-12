@@ -8,5 +8,5 @@ import java.util.Map;
 public interface SecurityService {
      Map<String , String> errorCheckAccountMap(Account account);
 
-     Map<String, String> checkDataRegister(User user);
+     void registerUser(User user, Account account);
 }

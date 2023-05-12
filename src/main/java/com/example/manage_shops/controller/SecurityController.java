@@ -2,7 +2,10 @@ package com.example.manage_shops.controller;
 
 import com.example.manage_shops.config.UserDetailsImp;
 import com.example.manage_shops.entity.Account;
+import com.example.manage_shops.entity.User;
 import com.example.manage_shops.jwt.JwtUtils;
+import com.example.manage_shops.repository.UserRepo;
+import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.SecurityService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +26,7 @@ public class SecurityController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final SecurityService securityService;
+    private final Commons commons;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Account account) {
@@ -41,7 +46,11 @@ public class SecurityController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register() {
+    public ResponseEntity<?> register(@Valid @RequestBody User user, @Valid @RequestBody Account account, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(commons.handleExceptionInBindingResult(result));
+        }
+
         return null;
     }
     @GetMapping("/random")

@@ -34,7 +34,9 @@ public class SecurityServiceImp implements SecurityService {
     }
 
     @Override
-    public Map<String, String> checkDataRegister(User user) {
-        return null;
+    public void registerUser(User user, Account account) {
+        if (accountRepo.findByUserName(account.getUserName()).isPresent()) {
+            throw new
+        }
     }
 }
