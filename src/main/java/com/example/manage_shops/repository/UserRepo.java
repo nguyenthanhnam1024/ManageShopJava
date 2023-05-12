@@ -15,4 +15,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     List<User> searchUserByKeyword(@Param("keyword") String keyword);
 
     Optional<User> findByIdAccount(Long accountId);
+
+    Optional<User> findByName(String name);
 }

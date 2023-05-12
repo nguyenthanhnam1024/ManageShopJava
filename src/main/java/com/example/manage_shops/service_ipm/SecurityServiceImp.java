@@ -2,7 +2,10 @@ package com.example.manage_shops.service_ipm;
 
 import com.example.manage_shops.entity.Account;
 import com.example.manage_shops.entity.User;
+import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.repository.AccountRepo;
+import com.example.manage_shops.repository.UserRepo;
+import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.SecurityService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SecurityServiceImp implements SecurityService {
     private final AccountRepo accountRepo;
+    private final Commons commons;
+    private final UserRepo userRepo;
 
     @Override
     public Map<String, String> errorCheckAccountMap(Account account) {
@@ -34,9 +39,10 @@ public class SecurityServiceImp implements SecurityService {
     }
 
     @Override
-    public void registerUser(User user, Account account) {
-        if (accountRepo.findByUserName(account.getUserName()).isPresent()) {
-            throw new
-        }
+    public void registerUser(User user, Account account) throws MyValidateException {
+        commons.checkAccountInDatabase(account);
+        commons.checkUserInDatabase(user);
+        userRepo.save(user);
+        accountRepo.save(account);
     }
 }

@@ -3,8 +3,8 @@ package com.example.manage_shops.controller;
 import com.example.manage_shops.config.UserDetailsImp;
 import com.example.manage_shops.entity.Account;
 import com.example.manage_shops.entity.User;
+import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.jwt.JwtUtils;
-import com.example.manage_shops.repository.UserRepo;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.SecurityService;
 import lombok.AllArgsConstructor;
@@ -13,9 +13,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -46,15 +49,20 @@ public class SecurityController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User user, @Valid @RequestBody Account account, BindingResult result) {
+    public ResponseEntity<?> register(@Valid @RequestBody User user, @Valid @RequestBody Account account, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(commons.handleExceptionInBindingResult(result));
         }
-
-        return null;
+        securityService.registerUser(user, account);
+        return ResponseEntity.ok().build();
     }
-    @GetMapping("/random")
-    public String test() {
-        return "phai co jwt ms truy cap dc api nay";
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        if (authentication  != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body("login failure");
     }
 }

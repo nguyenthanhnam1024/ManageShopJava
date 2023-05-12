@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class MyHandlesException {
+    @ExceptionHandler(MyValidateException.class)
+    public ResponseEntity<?> handleConflict(MyValidateException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(MyAuthenticationException.class)
     public ResponseEntity<?> handleMyAuthenticationException(MyAuthenticationException ex) {
         return ResponseEntity.status(ex.getStatus()).body(ex);
