@@ -11,9 +11,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -32,19 +31,22 @@ public class SecurityServiceImp implements SecurityService {
     }
 
     @Override
-    public Map<String, String> errorCheckAccountMap(RequestLogin requestLogin) {
-        Map<String, String> errorMap = new HashMap<>();
+    public String errorCheckAccountMap(RequestLogin requestLogin) {
+        if (requestLogin.getUserName() == null ||requestLogin.getPassword() == null) {
+            return "username or password not correct";
+        }
         Optional<Account> accountOptional = accountRepo.findByUserName(requestLogin.getUserName());
         if (!accountOptional.isPresent()) {
-                errorMap.put("error", "username or password not correct");
-                return errorMap;
+            return "username or password not correct";
         }
-        return errorMap;
+        return null;
     }
 
     @Override
+    @Transactional
     public void registerUser(User user, Account account) throws MyValidateException {
-        commons.checkAccountInDatabase(account);
+        Account accountExist = commons.checkAccountInDatabase(account);
+        user.setIdAccount(accountExist.getId());
         commons.checkUserInDatabase(user);
         userRepo.save(user);
         accountRepo.save(account);

@@ -40,27 +40,29 @@ public class SecurityController {
     }
 
     @PostMapping("/login")
+
     public ResponseEntity<?> login(HttpServletResponse response, @RequestBody RequestLogin requestLogin) {
-        Map<String, String> mapError = securityService.errorCheckAccountMap(requestLogin);
-        if (!mapError.isEmpty()) {
-            return ResponseEntity.badRequest().body(mapError);
+        String error = securityService.errorCheckAccountMap(requestLogin);
+        if (error != null) {
+            return ResponseEntity.status(1000).body(error);
         }
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        requestLogin.getUserName(),
-                        requestLogin.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwt((UserDetailsImp) authentication.getPrincipal());
-        response.addHeader("Authorization", "Bearer " + jwt);
-        return ResponseEntity.ok(securityService.responseLogin(requestLogin.getUserName()));
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            requestLogin.getUserName(),
+//                            requestLogin.getPassword()
+//                    )
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            String jwt = jwtUtils.generateJwt((UserDetailsImp) authentication.getPrincipal());
+            return ResponseEntity.ok("jwt");
+//        response.addHeader("Authorization", "Bearer " + jwt);
+//        return ResponseEntity.ok(securityService.responseLogin(requestLogin.getUserName()));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody User user, @Valid @RequestBody Account account, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(commons.handleExceptionInBindingResult(result));
+            return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
         }
         securityService.registerUser(user, account);
         return ResponseEntity.ok().build();
@@ -74,4 +76,10 @@ public class SecurityController {
         }
         return ResponseEntity.badRequest().body("login failure");
     }
+
+    @GetMapping("/abc")
+    public String console() {
+        return "anc";
+    }
+
 }

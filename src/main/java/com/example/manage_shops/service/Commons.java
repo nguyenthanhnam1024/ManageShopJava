@@ -14,6 +14,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,10 +33,12 @@ public class Commons {
         return errorValidateMap;
     }
 
-    public void checkAccountInDatabase(Account account) throws MyValidateException {
-        if (accountRepo.findByUserName(account.getUserName()).isPresent()) {
+    public Account checkAccountInDatabase(Account account) throws MyValidateException {
+        Optional<Account> accountOptional = accountRepo.findByUserName(account.getUserName());
+        if (accountOptional.isPresent()) {
             throw new MyValidateException("Account is present");
         }
+        return accountOptional.get();
     }
 
     public void checkUserInDatabase(User user) throws MyValidateException {

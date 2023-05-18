@@ -12,8 +12,7 @@ import java.util.Map;
 
 public interface SecurityService {
      List<Shop> getShopList();
-
-     Map<String , String> errorCheckAccountMap(RequestLogin requestLogin);
+     String errorCheckAccountMap(RequestLogin requestLogin);
 
      void registerUser(User user, Account account) throws MyValidateException;
 
