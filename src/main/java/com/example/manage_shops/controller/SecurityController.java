@@ -2,10 +2,8 @@ package com.example.manage_shops.controller;
 
 import com.example.manage_shops.config.UserDetailsImp;
 import com.example.manage_shops.dto.RequestLogin;
-import com.example.manage_shops.entity.Account;
+import com.example.manage_shops.dto.RequestRegister;
 import com.example.manage_shops.entity.Shop;
-import com.example.manage_shops.entity.User;
-import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.jwt.JwtUtils;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.SecurityService;
@@ -40,35 +38,37 @@ public class SecurityController {
     }
 
     @PostMapping("/login")
-
     public ResponseEntity<?> login(HttpServletResponse response, @RequestBody RequestLogin requestLogin) {
         String error = securityService.errorCheckAccountMap(requestLogin);
         if (error != null) {
             return ResponseEntity.status(1000).body(error);
         }
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            requestLogin.getUserName(),
-//                            requestLogin.getPassword()
-//                    )
-//            );
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            String jwt = jwtUtils.generateJwt((UserDetailsImp) authentication.getPrincipal());
-            return ResponseEntity.ok("jwt");
-//        response.addHeader("Authorization", "Bearer " + jwt);
-//        return ResponseEntity.ok(securityService.responseLogin(requestLogin.getUserName()));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            requestLogin.getUserName(),
+                            requestLogin.getPassword()
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwt((UserDetailsImp) authentication.getPrincipal());
+        response.addHeader("Authorization", "Bearer " + jwt);
+        return ResponseEntity.ok(securityService.responseLogin(requestLogin.getUserName()));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User user, @Valid @RequestBody Account account, BindingResult result) throws MyValidateException {
-        if (result.hasErrors()) {
-            return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
+    public ResponseEntity<?> register(@Valid @RequestBody RequestRegister requestRegister, BindingResult result) {
+        Map<String, String> errors = securityService.errorCheckRequestRegisterMap(requestRegister);
+        if (result.hasErrors() || !errors.isEmpty()) {
+            Map<String, String> allError = commons.handleExceptionInBindingResult(result);
+            allError.putAll(errors);
+            return ResponseEntity.status(1000).body(allError);
         }
-        securityService.registerUser(user, account);
+        securityService.registerUser(requestRegister);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/logout")
+
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (authentication  != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
@@ -76,10 +76,4 @@ public class SecurityController {
         }
         return ResponseEntity.badRequest().body("login failure");
     }
-
-    @GetMapping("/abc")
-    public String console() {
-        return "anc";
-    }
-
 }
