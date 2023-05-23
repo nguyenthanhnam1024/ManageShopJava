@@ -2,6 +2,7 @@ package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,12 +15,13 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "role must other null")
+    @NotNull(message = "shop must other null")
     private int idShop;
 
     @NotNull(message = "role must other null")
@@ -41,10 +43,6 @@ public class User {
     private String phoneNumber;
 
     @NotNull(message = "role must other null")
-    @Size(min = 8, max = 60, message = "7 keyword < origin < 61 keyword")
+    @Size(min = 6, max = 60, message = "5 keyword < origin < 61 keyword")
     private String address;
-
-    public User() {
-
-    }
 }
