@@ -1,23 +1,14 @@
 package com.example.manage_shops.my_enum;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum RoleEnum {
     ADMIN(1, "ADMIN"),
-    MANAGE(2, "MANAGE"),
+    MANAGER(2, "MANAGER"),
     STAFF(3, "STAFF");
-
-    private final int idRole;
+    private final int roleId;
     private final String roleName;
-
-    RoleEnum(int idRole, String roleName) {
-        this.idRole = idRole;
-        this.roleName = roleName;
-    }
-
-    public int getIdRole() {
-        return idRole;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
 }

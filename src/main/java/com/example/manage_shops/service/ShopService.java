@@ -1,25 +1,23 @@
 package com.example.manage_shops.service;
 
-import com.example.manage_shops.dto.ShopDTO;
 import com.example.manage_shops.entity.Shop;
 import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.response.ResponseLogin;
 
 import java.util.List;
 
 public interface ShopService {
-    List<ShopDTO> getAllShop(int roleIdOfUser) throws MyValidateException;
+    void validateRole(String roleName) throws MyValidateException;
 
-    ShopDTO getShopById(int shopId, int roleIdOfUser) throws MyValidateException;
+    List<Shop> getAllShop(ResponseLogin responseLogin) throws MyValidateException;
 
-    ShopDTO saveShop(Shop shop, int roleIdOfUser) throws MyValidateException;
+    Shop getShopById(int shopId, ResponseLogin responseLogin) throws MyValidateException;
 
-    ShopDTO updateShop(Shop shop, int roleIdOfUser) throws MyValidateException;
+    Shop saveShop(Shop shop, ResponseLogin responseLogin) throws MyValidateException;
 
-    ShopDTO deleteShop(int shopId, int roleIdOfUser) throws MyValidateException;
+    Shop updateShop(Shop shop, ResponseLogin responseLogin) throws MyValidateException;
 
-    List<ShopDTO> getShopByKeyword(String keyword, int roleIdOfUser) throws MyValidateException;
+    Shop deleteShop(int shopId, ResponseLogin responseLogin) throws MyValidateException;
 
-    ShopDTO mapIntoShopDTO(Shop shop);
-
-    List<ShopDTO> mapIntoListShopDTO(List<Shop> shopList);
+    List<Shop> getShopByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException;
 }

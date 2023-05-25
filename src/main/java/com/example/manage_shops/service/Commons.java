@@ -1,8 +1,10 @@
 package com.example.manage_shops.service;
 
-import com.example.manage_shops.entity.Role;
+import com.example.manage_shops.entity.Shop;
+import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.my_enum.RoleEnum;
-import com.example.manage_shops.repository.RoleRepo;
+import com.example.manage_shops.repository.ShopRepo;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,12 +16,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class Commons {
-    private final RoleRepo roleRepo;
-
-    public Commons(RoleRepo roleRepo) {
-        this.roleRepo = roleRepo;
-    }
+    private final ShopRepo shopRepo;
 
     public Map<String, String> handleExceptionInBindingResult(BindingResult result) {
         Map<String, String> errorValidateMap = new HashMap<>();
@@ -31,26 +30,29 @@ public class Commons {
         return errorValidateMap;
     }
 
-    public String validateRoleId(List<Integer> listRoleId, int roleIdOfUser) {
-        Optional<Role> roleOptional = roleRepo.findById(roleIdOfUser);
-        if (!roleOptional.isPresent()) {
-            return "role of you no exist";
+
+    public void validateShopForUserToQuery(int idShop, int idShopOfUser) throws MyValidateException {
+        if (idShop != idShopOfUser) {
+            throw new MyValidateException("You cannot operate in the current shop");
         }
-        for (Integer idRole : listRoleId) {
-            if (idRole == roleIdOfUser) {
-                return null;
-            }
+        Optional<Shop> optionalShop = shopRepo.findById(idShop);
+        if (!optionalShop.isPresent()) {
+            throw new MyValidateException("Shop not found for you to add data") ;
         }
-        return "you no right access";
     }
 
-    public String onlyValidateRoleForADMIN(int roleIdOfUser) {
-        Optional<Role> roleOptional = roleRepo.findById(roleIdOfUser);
-        if (!roleOptional.isPresent()) {
-            return "you no have role ADMIN";
+    public void validateRole(List<String> roleNameList, String roleNameOfUser) throws MyValidateException {
+        for (String roleName: roleNameList) {
+            if (roleName.equals(roleNameOfUser)) {
+                return;
+            }
         }
-        if (RoleEnum.ADMIN.getIdRole() == roleIdOfUser) {
-            return null; }
-        return "you no right access";
+        throw new MyValidateException("you do not have permission to perform this function");
+    }
+    public void validateRoleForADMIN(String roleNameOfUser) throws MyValidateException {
+        if (RoleEnum.ADMIN.getRoleName().equals(roleNameOfUser)) {
+            return;
+        }
+        throw new MyValidateException("you do not have permission to perform this function");
     }
 }
