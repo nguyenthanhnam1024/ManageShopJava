@@ -1,7 +1,8 @@
 package com.example.manage_shops.controller;
 
-import com.example.manage_shops.entity.Shop;
 import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.request.RequestShop;
+import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.ShopService;
 import org.springframework.http.ResponseEntity;
@@ -21,39 +22,39 @@ public class ShopController {
         this.commons = commons;
     }
 
-    @GetMapping("/getAll/{roleIdUser}")
-    public ResponseEntity<?> getAllShop(@PathVariable int roleIdUser) throws MyValidateException {
-        return ResponseEntity.ok(shopService.getAllShop(roleIdUser));
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllShop(@RequestBody ResponseLogin responseLogin) throws MyValidateException {
+        return ResponseEntity.ok(shopService.getAllShop(responseLogin));
     }
 
-    @GetMapping("/getById/{shopId}/{roleIdUser}")
-    public ResponseEntity<?> getShopById(@PathVariable int shopId, @PathVariable int roleIdUser) throws MyValidateException {
-        return ResponseEntity.ok(shopService.getShopById(shopId, roleIdUser));
+    @GetMapping("/getById/{shopId}")
+    public ResponseEntity<?> getShopById(@PathVariable int shopId, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
+        return ResponseEntity.ok(shopService.getShopById(shopId, responseLogin));
     }
 
-    @PostMapping("/save/{roleIdUser}")
-    public ResponseEntity<?> saveShop(@Valid @RequestBody Shop shop, @PathVariable int roleIdUser, BindingResult result) throws MyValidateException {
+    @PostMapping("/save")
+    public ResponseEntity<?> saveShop(@Valid @RequestBody RequestShop requestShop, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
             return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
         }
-        return ResponseEntity.ok(shopService.saveShop(shop, roleIdUser));
+        return ResponseEntity.ok(shopService.saveShop(requestShop.getShop(), requestShop.getResponseLogin()));
     }
 
-    @PutMapping("/update/{roleIdUser}")
-    public ResponseEntity<?> updateShop(@Valid @RequestBody Shop shop, @PathVariable int roleIdUser, BindingResult result) throws MyValidateException {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateShop(@Valid @RequestBody RequestShop requestShop, BindingResult result) throws MyValidateException {
         if (result.hasErrors()) {
             return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
         }
-        return ResponseEntity.ok(shopService.updateShop(shop, roleIdUser));
+        return ResponseEntity.ok(shopService.updateShop(requestShop.getShop(), requestShop.getResponseLogin()));
     }
 
-    @DeleteMapping("/delete/{shopId}/{roleIdUser}")
-    public ResponseEntity<?> deleteRole(@PathVariable int shopId, @PathVariable int roleIdUser) throws MyValidateException{
-        return ResponseEntity.ok(shopService.deleteShop(shopId, roleIdUser));
+    @DeleteMapping("/delete/{shopId}")
+    public ResponseEntity<?> deleteRole(@PathVariable int shopId, @RequestBody ResponseLogin responseLogin) throws MyValidateException{
+        return ResponseEntity.ok(shopService.deleteShop(shopId, responseLogin));
     }
 
-    @GetMapping("/getByKeyword/{roleIdUser}")
-    public ResponseEntity<?> getShopByKeyword(@PathVariable int roleIdUser, @RequestParam String keyword) throws MyValidateException {
-        return ResponseEntity.ok(shopService.getShopByKeyword(keyword, roleIdUser));
+    @GetMapping("/getByKeyword")
+    public ResponseEntity<?> getShopByKeyword(@RequestBody ResponseLogin responseLogin, @RequestParam String keyword) throws MyValidateException {
+        return ResponseEntity.ok(shopService.getShopByKeyword(keyword, responseLogin));
     }
 }

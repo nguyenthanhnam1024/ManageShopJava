@@ -1,111 +1,107 @@
 package com.example.manage_shops.service_ipm;
 
-import com.example.manage_shops.dto.ShopDTO;
 import com.example.manage_shops.entity.Shop;
 import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.repository.ShopRepo;
+import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.ShopService;
-import org.modelmapper.ModelMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ShopServiceImp implements ShopService {
     private final Commons commons;
-
     private  final ShopRepo shopRepo;
 
-    public ShopServiceImp(Commons commons, ShopRepo shopRepo) {
-        this.commons = commons;
-        this.shopRepo = shopRepo;
-    }
-
     @Override
-    public List<ShopDTO> getAllShop(int roleIdOfUser) throws MyValidateException {
-        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
-        if (message == null) {
-            return this.mapIntoListShopDTO(shopRepo.findAll());
+    public void validateRole(String roleName) throws MyValidateException {
+        if (roleName == null || roleName.equals("")) {
+            throw new MyValidateException("you do not have permission to perform this function");
         }
-        throw new MyValidateException(message);
+        commons.validateRoleForADMIN(roleName);
     }
 
     @Override
-    public ShopDTO getShopById(int shopId, int roleIdOfUser) throws MyValidateException {
-        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
-        if (message == null) {
-            Optional<Shop> shopExist = shopRepo.findById(shopId);
-            if (shopExist.isPresent()) {
-                return this.mapIntoShopDTO(shopExist.get());
+    public List<Shop> getAllShop(ResponseLogin responseLogin) throws MyValidateException {
+        this.validateRole(responseLogin.getRole());
+            try {
+                return shopRepo.findAll();
+            } catch (Exception ex) {
+                throw new MyValidateException("get list shop failure");
             }
-            throw new MyValidateException("shop name no have exist");
+    }
+
+    @Override
+    public Shop getShopById(int shopId, ResponseLogin responseLogin) throws MyValidateException {
+        this.validateRole(responseLogin.getRole());
+        Optional<Shop> shopExist = shopRepo.findById(shopId);
+        if (shopExist.isPresent()) {
+                return shopExist.get();
         }
-        throw new MyValidateException(message);
+        throw new MyValidateException("shop no exist");
     }
 
     @Override
-    public ShopDTO saveShop(Shop shop, int roleIdOfUser) throws MyValidateException {
-        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
-        if (message == null) {
-            Optional<Shop> shopExist = shopRepo.findByName(shop.getName());
-            if (!shopExist.isPresent()) {
-                return this.mapIntoShopDTO(shopRepo.save(shop));
+    public Shop saveShop(Shop shop, ResponseLogin responseLogin) throws MyValidateException {
+        this.validateRole(responseLogin.getRole());
+        Optional<Shop> shopExist = shopRepo.findByName(shop.getName());
+        if (!shopExist.isPresent()) {
+            try {
+                return shopRepo.save(shop);
+            } catch (Exception ex) {
+                throw new MyValidateException("create shop failure");
             }
-            throw new MyValidateException("shop name have been exist");
         }
-        throw new MyValidateException(message);
+        throw new MyValidateException("shop have been exist");
     }
 
     @Override
-    public ShopDTO updateShop(Shop shop, int roleIdOfUser) throws MyValidateException {
-        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
-        if (message == null) {
-            Optional<Shop> shopExist = shopRepo.findById(shop.getId());
-            if (shopExist.isPresent()) {
-                return this.mapIntoShopDTO(shopRepo.save(shop));
+    public Shop updateShop(Shop shop, ResponseLogin responseLogin) throws MyValidateException {
+        this.validateRole(responseLogin.getRole());
+        Optional<Shop> shopExist = shopRepo.findById(shop.getId());
+        if (shopExist.isPresent()) {
+            if (shopExist.get().getName().equals(shop.getName())) {
+                throw new MyValidateException("shop have been exist");
             }
-            throw new MyValidateException("can't found this shop in database to update");
+            try {
+                return shopRepo.save(shop);
+            } catch (Exception ex) {
+                throw new MyValidateException("update shop failure");
+            }
         }
-        throw new MyValidateException(message);
+        throw new MyValidateException("can't found this shop in database to update");
     }
 
     @Override
-    public ShopDTO deleteShop(int shopId, int roleIdOfUser) throws MyValidateException {
-        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
-        if (message == null) {
-            Optional<Shop> optionalShop = shopRepo.findById(shopId);
-            if (!optionalShop.isPresent()) {
-                throw new MyValidateException("can't found this shop to delete");
-            }
+    public Shop deleteShop(int shopId, ResponseLogin responseLogin) throws MyValidateException {
+        this.validateRole(responseLogin.getRole());
+        Optional<Shop> optionalShop = shopRepo.findById(shopId);
+        if (!optionalShop.isPresent()) {
+            throw new MyValidateException("can't found this shop to delete");
+        }
+        try {
             shopRepo.deleteById(shopId);
-            return this.mapIntoShopDTO(optionalShop.get());
+            return optionalShop.get();
+        } catch (Exception ex) {
+            throw new MyValidateException("error as delete shop");
         }
-        throw new MyValidateException(message);
     }
 
     @Override
-    public List<ShopDTO> getShopByKeyword(String keyword, int roleIdOfUser) throws MyValidateException {
+    public List<Shop> getShopByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException {
         if (keyword == null || keyword.equals("")) {
-            throw new MyValidateException("keyword must be difficult null and blank");
+            throw new MyValidateException("keyword must be different null and blank");
         }
-        String message = commons.onlyValidateRoleForADMIN(roleIdOfUser);
-        if (message == null) {
-            return this.mapIntoListShopDTO(shopRepo.findByNameContainingIgnoreCase(keyword));
+        this.validateRole(responseLogin.getRole());
+        try {
+            return shopRepo.findByNameContainingIgnoreCase(keyword);
+        } catch (Exception ex) {
+            throw new MyValidateException("error as search");
         }
-        throw new MyValidateException(message);
-    }
-
-    @Override
-    public ShopDTO mapIntoShopDTO(Shop shop) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(shop, ShopDTO.class);
-    }
-
-    @Override
-    public List<ShopDTO> mapIntoListShopDTO(List<Shop> shopList) {
-        return shopList.stream().map(this::mapIntoShopDTO).collect(Collectors.toList());
     }
 }
