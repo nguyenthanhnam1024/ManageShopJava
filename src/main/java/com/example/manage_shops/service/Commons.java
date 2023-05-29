@@ -50,8 +50,10 @@ public class Commons {
         throw new MyValidateException("you do not have permission to perform this function");
     }
     public void validateRoleForADMIN(String roleNameOfUser) throws MyValidateException {
-        if (RoleEnum.ADMIN.getRoleName().equals(roleNameOfUser)) {
-            return;
+        if (roleNameOfUser != null && !roleNameOfUser.equals("")) {
+            if (RoleEnum.ADMIN.getRoleName().equals(roleNameOfUser)) {
+                return;
+            }
         }
         throw new MyValidateException("you do not have permission to perform this function");
     }
