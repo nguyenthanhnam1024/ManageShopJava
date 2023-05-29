@@ -2,6 +2,7 @@ package com.example.manage_shops.controller;
 
 import com.example.manage_shops.entity.User;
 import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.Commons;
@@ -39,9 +40,14 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/getRoleNames")
+    public ResponseEntity<?> getListRoleName() {
+        return ResponseEntity.ok(userService.getListRoleName());
+    }
+
     @PutMapping("/update")
-    public void updateUser(@Valid @RequestBody User user) {
-        userService.updateUser(user);
+    public ResponseEntity<?> updateUser(@Valid @RequestBody RequestUpdateUser requestUpdateUser) throws MyValidateException {
+        return ResponseEntity.ok(userService.updateUser(requestUpdateUser));
     }
 
     @DeleteMapping("delete/{id}")

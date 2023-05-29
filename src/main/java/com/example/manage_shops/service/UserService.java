@@ -2,6 +2,7 @@ package com.example.manage_shops.service;
 
 import com.example.manage_shops.entity.User;
 import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
 
@@ -15,7 +16,9 @@ public interface UserService {
 
      void saveUserFromADMIN(RequestUser requestUser) throws MyValidateException;
 
-     void updateUser(User user);
+     List<String> getListRoleName();
+
+     ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException;
 
      void deleteUser(Long id);
 

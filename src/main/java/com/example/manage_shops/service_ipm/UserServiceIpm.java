@@ -1,16 +1,11 @@
 package com.example.manage_shops.service_ipm;
 
-import com.example.manage_shops.entity.Account;
-import com.example.manage_shops.entity.Role;
-import com.example.manage_shops.entity.RoleUser;
-import com.example.manage_shops.entity.User;
+import com.example.manage_shops.entity.*;
 import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.my_enum.RoleEnum;
-import com.example.manage_shops.repository.AccountRepo;
-import com.example.manage_shops.repository.RoleRepo;
-import com.example.manage_shops.repository.RoleUserRepo;
-import com.example.manage_shops.repository.UserRepo;
+import com.example.manage_shops.repository.*;
 import com.example.manage_shops.request.RequestRegister;
+import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.SecurityService;
@@ -24,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +29,7 @@ public class UserServiceIpm implements UserService {
     private final RoleRepo roleRepo;
     private final RoleUserRepo roleUserRepo;
     private final SecurityService securityService;
+    private final ShopRepo shopRepo;
 
     @Override
     public List<User> getAllUser(ResponseLogin responseLogin) throws MyValidateException {
@@ -90,8 +87,38 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
-        userRepo.save(user);
+    public List<String> getListRoleName() {
+        return roleRepo.findAll().stream().map(Role::getRoleName).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException {
+        Optional<Shop> shopOptional = shopRepo.findById(requestUpdateUser.getShop().getId());
+        if (shopOptional.isPresent()) {
+            Optional<Account> accountOptional = accountRepo.findByUserName(requestUpdateUser.getUserNameOfAccount());
+            if (accountOptional.isPresent()) {
+                Optional<User> userOptional = userRepo.findByName(requestUpdateUser.getOldName());
+                if (userOptional.isPresent()) {
+                    User user = userOptional.get();
+                    ModelMapper modelMapper = new ModelMapper();
+                    modelMapper.map(requestUpdateUser, user);
+                    try {
+                        userRepo.save(user);
+                    } catch (Exception ex) {
+                        throw new MyValidateException("can not update info. error server");
+                    }
+                    ResponseLogin responseLogin = modelMapper.map(requestUpdateUser, ResponseLogin.class);
+                    modelMapper.map(user, responseLogin);
+                    return responseLogin;
+                } else {
+                    throw new MyValidateException("Your info old does not exist to update");
+                }
+            } else {
+                throw new MyValidateException("Your account does not exist");
+            }
+        }
+        throw new MyValidateException("Your shop does not exist");
     }
 
     @Override
