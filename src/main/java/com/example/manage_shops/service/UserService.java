@@ -20,7 +20,5 @@ public interface UserService {
 
      ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException;
 
-     void deleteUser(Long id);
-
-     List<User> searchUserByKeyword(String keyword);
+     List<User> searchUserByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException;
 }

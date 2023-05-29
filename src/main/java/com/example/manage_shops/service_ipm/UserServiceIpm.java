@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -122,12 +123,21 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
-        userRepo.deleteById(id);
-    }
-
-    @Override
-    public List<User> searchUserByKeyword(String keyword) {
-        return userRepo.searchUserByKeyword(keyword);
+    public List<User> searchUserByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException {
+        if (RoleEnum.ADMIN.getRoleName().equals(responseLogin.getRole())) {
+            try {
+                return userRepo.searchUserByKeyword(keyword);
+            } catch (Exception ex) {
+                throw new MyValidateException("get list user failure");
+            }
+        }
+        if (RoleEnum.MANAGE.getRoleName().equals(responseLogin.getRole())) {
+            try {
+                return userRepo.searchUserByKeywordAndIdShop(keyword, responseLogin.getShop().getId());
+            } catch (Exception ex) {
+                throw new MyValidateException("get list user failure");
+            }
+        }
+        throw new MyValidateException("you do not have permission to perform this function");
     }
 }

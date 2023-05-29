@@ -50,13 +50,8 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(requestUpdateUser));
     }
 
-    @DeleteMapping("delete/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-    }
-
     @GetMapping("/searchByKeyword")
-    public List<User> getAllUser(@RequestParam("keyword") String keyword) {
-        return userService.searchUserByKeyword(keyword);
+    public ResponseEntity getAllUser(@RequestParam("keyword") String keyword, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
+        return ResponseEntity.ok(userService.searchUserByKeyword(keyword, responseLogin));
     }
 }
