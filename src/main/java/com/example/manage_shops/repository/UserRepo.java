@@ -14,9 +14,14 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.name LIKE %:keyword%")
     List<User> searchUserByKeyword(@Param("keyword") String keyword);
 
+    @Query("SELECT u FROM User u WHERE u.name LIKE %:keyword% AND u.idShop = :idShop")
+    List<User> searchUserByKeywordAndIdShop(@Param("keyword") String keyword, @Param("idShop") int idShop);
+
     Optional<User> findByIdAccount(Long accountId);
 
     Optional<User> findByName(String name);
 
     void deleteByName(String name);
+
+    List<User> findByIdShop(int idShop);
 }

@@ -1,6 +1,8 @@
 package com.example.manage_shops.controller;
 
 import com.example.manage_shops.entity.User;
+import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,8 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public List<User> getAllUser() {
-        return userService.getAllUser();
+    public List<User> getAllUser(@RequestBody ResponseLogin responseLogin) throws MyValidateException {
+        return userService.getAllUser(responseLogin);
     }
 
     @PostMapping("/save")
