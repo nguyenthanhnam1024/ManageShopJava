@@ -2,21 +2,25 @@ package com.example.manage_shops.controller;
 
 import com.example.manage_shops.entity.User;
 import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
+import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final Commons commons;
 
     @GetMapping("/getAll")
     public List<User> getAllUser(@RequestBody ResponseLogin responseLogin) throws MyValidateException {
@@ -24,8 +28,15 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public void saveUser(@Valid @RequestBody User user) {
-        userService.saveUser(user);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody RequestUser requestUser, BindingResult result) throws MyValidateException {
+        Map<String, String> errors = userService.errorCheckRequestRegisterFromADMINMap(requestUser);
+        if (result.hasErrors() || !errors.isEmpty()) {
+            Map<String, String> allError = commons.handleExceptionInBindingResult(result);
+            allError.putAll(errors);
+            return ResponseEntity.status(400).body(allError);
+        }
+        userService.saveUserFromADMIN(requestUser);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update")
