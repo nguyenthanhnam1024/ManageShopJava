@@ -1,7 +1,7 @@
-package com.example.managershop.controller;
+package com.example.manage_shops.controller;
 
-import com.example.managershop.entity.User;
-import com.example.managershop.service.UserService;
+import com.example.manage_shops.entity.User;
+import com.example.manage_shops.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

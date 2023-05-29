@@ -1,8 +1,8 @@
-package com.example.managershop.service_ipm;
+package com.example.manage_shops.service_ipm;
 
-import com.example.managershop.entity.User;
-import com.example.managershop.repository.UserRepo;
-import com.example.managershop.service.UserService;
+import com.example.manage_shops.entity.User;
+import com.example.manage_shops.repository.UserRepo;
+import com.example.manage_shops.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

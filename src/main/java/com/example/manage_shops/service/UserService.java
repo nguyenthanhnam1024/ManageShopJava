@@ -1,6 +1,6 @@
-package com.example.managershop.service;
+package com.example.manage_shops.service;
 
-import com.example.managershop.entity.User;
+import com.example.manage_shops.entity.User;
 
 import java.util.List;
 
