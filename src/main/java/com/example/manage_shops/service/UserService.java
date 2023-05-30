@@ -16,8 +16,6 @@ public interface UserService {
 
      void saveUserFromADMIN(RequestUser requestUser) throws MyValidateException;
 
-     List<String> getListRoleName();
-
      ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException;
 
      List<User> searchUserByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException;

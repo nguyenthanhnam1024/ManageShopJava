@@ -40,18 +40,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getRoleNames")
-    public ResponseEntity<?> getListRoleName() {
-        return ResponseEntity.ok(userService.getListRoleName());
-    }
-
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@Valid @RequestBody RequestUpdateUser requestUpdateUser) throws MyValidateException {
         return ResponseEntity.ok(userService.updateUser(requestUpdateUser));
     }
 
     @GetMapping("/searchByKeyword")
-    public ResponseEntity getAllUser(@RequestParam("keyword") String keyword, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
+    public ResponseEntity<?> getAllUser(@RequestParam("keyword") String keyword, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
         return ResponseEntity.ok(userService.searchUserByKeyword(keyword, responseLogin));
     }
 }

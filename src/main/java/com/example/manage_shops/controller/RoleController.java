@@ -19,6 +19,11 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getAllRole(responseLogin));
     }
 
+    @GetMapping("/getRoleNames")
+    public ResponseEntity<?> getListRoleName(@RequestBody ResponseLogin responseLogin) throws MyValidateException {
+        return ResponseEntity.ok(roleService.getListRoleName(responseLogin));
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> saveRole(@RequestBody RequestRole requestRole) throws MyValidateException {
         roleService.saveRole(requestRole);

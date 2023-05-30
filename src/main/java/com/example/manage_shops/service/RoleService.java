@@ -10,5 +10,7 @@ import java.util.List;
 public interface RoleService {
     List<Role> getAllRole(ResponseLogin responseLogin) throws MyValidateException;
 
+    List<String> getListRoleName(ResponseLogin responseLogin) throws MyValidateException;
+
     void saveRole(RequestRole requestRole) throws MyValidateException;
 }

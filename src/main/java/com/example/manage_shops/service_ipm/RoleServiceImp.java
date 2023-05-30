@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +30,17 @@ public class RoleServiceImp implements RoleService {
             throw new MyValidateException("get list role failure");
         }
     }
+
+    @Override
+    public List<String> getListRoleName(ResponseLogin responseLogin) throws MyValidateException {
+        for (Role role : roleRepo.findAll()) {
+            if (role.getRoleName().equals(responseLogin.getRole())) {
+                return roleRepo.findAll().stream().map(Role::getRoleName).collect(Collectors.toList());
+            }
+        }
+        throw new MyValidateException("restricted access");
+    }
+
 
     @Override
     @Transactional

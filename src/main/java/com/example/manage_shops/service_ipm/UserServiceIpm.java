@@ -16,11 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -85,11 +83,6 @@ public class UserServiceIpm implements UserService {
         roleUser.setIdRole(roleExistPresent.get().getId());
         roleUser.setIdUser(userExist.getId());
         roleUserRepo.save(roleUser);
-    }
-
-    @Override
-    public List<String> getListRoleName() {
-        return roleRepo.findAll().stream().map(Role::getRoleName).collect(Collectors.toList());
     }
 
     @Override
