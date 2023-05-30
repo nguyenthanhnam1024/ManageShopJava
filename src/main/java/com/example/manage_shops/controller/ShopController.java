@@ -22,9 +22,9 @@ public class ShopController {
         this.commons = commons;
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<?> getAllShop(@RequestBody ResponseLogin responseLogin) throws MyValidateException {
-        return ResponseEntity.ok(shopService.getAllShop(responseLogin));
+    @GetMapping("/getShopList")
+    public ResponseEntity<?> getAllShop() throws MyValidateException {
+        return ResponseEntity.ok(shopService.getAllShop());
     }
 
     @GetMapping("/getById/{shopId}")

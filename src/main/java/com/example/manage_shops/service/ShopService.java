@@ -9,7 +9,7 @@ import java.util.List;
 public interface ShopService {
     void validateRole(String roleName) throws MyValidateException;
 
-    List<Shop> getAllShop(ResponseLogin responseLogin) throws MyValidateException;
+    List<Shop> getAllShop() throws MyValidateException;
 
     Shop getShopById(int shopId, ResponseLogin responseLogin) throws MyValidateException;
 

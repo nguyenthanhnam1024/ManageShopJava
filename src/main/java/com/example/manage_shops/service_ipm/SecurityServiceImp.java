@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,10 +24,6 @@ public class SecurityServiceImp implements SecurityService {
     private final RoleRepo roleRepo;
     private final RoleUserRepo roleUserRepo;
     private final ShopRepo shopRepo;
-    @Override
-    public List<Shop> getShopList() {
-        return shopRepo.findAll();
-    }
 
     @Override
     public String errorCheckAccountMap(RequestLogin requestLogin) {

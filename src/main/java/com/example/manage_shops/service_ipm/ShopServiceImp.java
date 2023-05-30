@@ -27,13 +27,12 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public List<Shop> getAllShop(ResponseLogin responseLogin) throws MyValidateException {
-        this.validateRole(responseLogin.getRole());
-            try {
-                return shopRepo.findAll();
-            } catch (Exception ex) {
-                throw new MyValidateException("get list shop failure");
-            }
+    public List<Shop> getAllShop() throws MyValidateException {
+        try {
+            return shopRepo.findAll();
+        } catch (Exception ex) {
+            throw new MyValidateException("get list shop failure");
+        }
     }
 
     @Override
