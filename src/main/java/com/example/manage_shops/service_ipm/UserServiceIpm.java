@@ -8,6 +8,7 @@ import com.example.manage_shops.request.RequestRegister;
 import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
+import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.SecurityService;
 import com.example.manage_shops.service.UserService;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class UserServiceIpm implements UserService {
     private final RoleUserRepo roleUserRepo;
     private final SecurityService securityService;
     private final ShopRepo shopRepo;
+    private final Commons commons;
 
     @Override
     public List<User> getAllUser(ResponseLogin responseLogin) throws MyValidateException {
@@ -113,6 +115,36 @@ public class UserServiceIpm implements UserService {
             }
         }
         throw new MyValidateException("Your shop does not exist");
+    }
+
+    @Override
+    @Transactional
+    public User updateUserFromADMIN(RequestUser requestUser) throws MyValidateException {
+        commons.validateRoleForADMIN(requestUser.getResponseLogin().getRole());
+        Optional<Shop> shopOptional = shopRepo.findById(requestUser.getIdShop());
+        if (shopOptional.isPresent()) {
+            Optional<Role> roleOptional = roleRepo.findByRoleName(requestUser.getRoleName());
+            if (roleOptional.isPresent()) {
+                Optional<User> userOptional = userRepo.findByName(requestUser.getName());
+                if (userOptional.isPresent()) {
+                    User user = userOptional.get();
+                    user.setIdShop(requestUser.getIdShop());
+                    roleUserRepo.deleteByIdUser(user.getId());
+                    RoleUser roleUser = new RoleUser();
+                    roleUser.setIdRole(roleOptional.get().getId());
+                    roleUser.setIdUser(user.getId());
+                    try {
+                        roleUserRepo.save(roleUser);
+                        return userRepo.save(user);
+                    } catch (Exception ex) {
+                        throw new MyValidateException("can not update, error server");
+                    }
+                }
+                throw new MyValidateException("not found user for update");
+            }
+            throw new MyValidateException("not found role for update");
+        }
+        throw new MyValidateException("not found shop for update");
     }
 
     @Override

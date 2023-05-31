@@ -45,6 +45,11 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(requestUpdateUser));
     }
 
+    @PutMapping("/updateUserFromADMIN")
+    public ResponseEntity<?> updateUserFromADMIN(@RequestBody RequestUser requestUser) throws MyValidateException {
+        return ResponseEntity.ok(userService.updateUserFromADMIN(requestUser));
+    }
+
     @GetMapping("/searchByKeyword")
     public ResponseEntity<?> getAllUser(@RequestParam("keyword") String keyword, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
         return ResponseEntity.ok(userService.searchUserByKeyword(keyword, responseLogin));
