@@ -4,6 +4,7 @@ import com.example.manage_shops.entity.Account;
 import com.example.manage_shops.entity.User;
 import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.repository.AccountRepo;
+import com.example.manage_shops.repository.RoleUserRepo;
 import com.example.manage_shops.repository.UserRepo;
 import com.example.manage_shops.request.RequestAccount;
 import com.example.manage_shops.service.AccountService;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class AccountServiceImp implements AccountService {
     private final AccountRepo accountRepo;
     private final UserRepo userRepo;
+    private final RoleUserRepo roleUserRepo;
 
     @Override
     public void updateAccount(RequestAccount requestAccount) throws MyValidateException {
@@ -53,6 +55,7 @@ public class AccountServiceImp implements AccountService {
             if (userOptional.isPresent()) {
                 if (accountOptional.get().getId().equals(userOptional.get().getIdAccount())) {
                     try {
+                        roleUserRepo.deleteByIdUser(userOptional.get().getId());
                         userRepo.deleteByName(requestAccount.getNameOfUser());
                         accountRepo.deleteById(accountOptional.get().getId());
                         return;
