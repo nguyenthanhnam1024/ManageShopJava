@@ -20,5 +20,5 @@ public interface UserService {
 
      User updateUserFromADMIN(RequestUser requestUser) throws MyValidateException;
 
-     List<User> searchUserByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException;
+     List<User> searchUserByKeyword(String keyword, String roleName, ResponseLogin responseLogin) throws MyValidateException;
 }

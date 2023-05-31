@@ -148,9 +148,15 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public List<User> searchUserByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException {
+    public List<User> searchUserByKeyword(String keyword, String roleName, ResponseLogin responseLogin) throws MyValidateException {
         if (RoleEnum.ADMIN.getRoleName().equals(responseLogin.getRole())) {
             try {
+                if (roleName !=null && !roleName.equals("")) {
+                    if (keyword == null || keyword.equals("")) {
+                        return userRepo.searchUserByRole(roleName);
+                    }
+                    return userRepo.searchUserByKeywordAndRole(keyword, roleName);
+                }
                 return userRepo.searchUserByKeyword(keyword);
             } catch (Exception ex) {
                 throw new MyValidateException("get list user failure");

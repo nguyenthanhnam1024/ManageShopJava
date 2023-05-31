@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/searchByKeyword")
-    public ResponseEntity<?> getAllUser(@RequestParam("keyword") String keyword, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
-        return ResponseEntity.ok(userService.searchUserByKeyword(keyword, responseLogin));
+    public ResponseEntity<?> getAllUser(@RequestParam("keyword") String keyword, @RequestParam("roleName") String roleName, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
+        return ResponseEntity.ok(userService.searchUserByKeyword(keyword, roleName, responseLogin));
     }
 }
