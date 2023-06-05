@@ -1,7 +1,6 @@
 package com.example.manage_shops.jwt;
 
 import com.example.manage_shops.config.UserDetailsImp;
-import com.example.manage_shops.exception.MyAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,7 +8,6 @@ import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Date;
 
 @Component
@@ -45,20 +43,21 @@ public class JwtUtils {
         throw new CredentialsExpiredException("Expiration jwt");
     }
 
-    public Boolean validateJwt(String token) throws IOException {
+    public Boolean validateJwt(String token, HttpServletResponse httpServletResponse){
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
-            throw new MyAuthenticationException(HttpServletResponse.SC_UNAUTHORIZED, "Invalid jwt");
+            httpServletResponse.setStatus(401);
         } catch (MalformedJwtException ex) {
-            throw new MyAuthenticationException(HttpServletResponse.SC_UNAUTHORIZED, "Malformed jwt");
+            httpServletResponse.setStatus(401);
         } catch (ExpiredJwtException ex) {
-            throw new MyAuthenticationException(HttpServletResponse.SC_BAD_REQUEST, "Expiration jwt");
+            httpServletResponse.setStatus(401);
         } catch (UnsupportedJwtException ex) {
-            throw new MyAuthenticationException(HttpServletResponse.SC_UNAUTHORIZED, "Unsupported jwt");
+            httpServletResponse.setStatus(401);
         } catch (IllegalArgumentException ex) {
-            throw new MyAuthenticationException(HttpServletResponse.SC_UNAUTHORIZED, "Illegal argument jwt");
+            httpServletResponse.setStatus(401);
         }
+        return false;
     }
 }

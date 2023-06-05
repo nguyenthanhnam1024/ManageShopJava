@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 @SpringBootApplication
 public class ManageShopsApplication {
@@ -39,12 +40,14 @@ public class ManageShopsApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:8080");
+				registry.addMapping("/**").allowedOrigins("http://localhost:8080")
+				.allowedHeaders("Authorization", "Content-Type").exposedHeaders("Authorization");
 			}
 		};
 	}
 
 	@PostConstruct
+	@Transactional
 	public void initialize() {
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		String encodedPassword = bc.encode("admin");

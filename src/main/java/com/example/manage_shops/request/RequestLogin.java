@@ -1,4 +1,4 @@
-package com.example.manage_shops.dto;
+package com.example.manage_shops.request;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.example.manage_shops.dto;
+package com.example.manage_shops.response;
 
 import com.example.manage_shops.entity.Shop;
 import lombok.Data;
@@ -10,6 +10,8 @@ public class ResponseLogin {
     private String role;
 
     private String name;
+    
+    private String userNameOfAccount;
 
     private int age;
 

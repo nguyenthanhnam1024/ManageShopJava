@@ -1,9 +1,8 @@
 package com.example.manage_shops.controller;
 
 import com.example.manage_shops.config.UserDetailsImp;
-import com.example.manage_shops.dto.RequestLogin;
-import com.example.manage_shops.dto.RequestRegister;
-import com.example.manage_shops.entity.Shop;
+import com.example.manage_shops.request.RequestLogin;
+import com.example.manage_shops.request.RequestRegister;
 import com.example.manage_shops.jwt.JwtUtils;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.SecurityService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,11 +29,6 @@ public class SecurityController {
     private final JwtUtils jwtUtils;
     private final SecurityService securityService;
     private final Commons commons;
-
-    @GetMapping("/getShopList")
-    public List<Shop> getShopList() {
-        return securityService.getShopList();
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpServletResponse response, @RequestBody RequestLogin requestLogin) {

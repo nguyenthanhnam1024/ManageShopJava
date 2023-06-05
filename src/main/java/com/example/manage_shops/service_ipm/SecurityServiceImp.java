@@ -1,10 +1,10 @@
 package com.example.manage_shops.service_ipm;
 
-import com.example.manage_shops.dto.RequestLogin;
-import com.example.manage_shops.dto.RequestRegister;
-import com.example.manage_shops.dto.ResponseLogin;
+import com.example.manage_shops.request.RequestLogin;
+import com.example.manage_shops.request.RequestRegister;
 import com.example.manage_shops.entity.*;
 import com.example.manage_shops.repository.*;
+import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.SecurityService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,10 +24,6 @@ public class SecurityServiceImp implements SecurityService {
     private final RoleRepo roleRepo;
     private final RoleUserRepo roleUserRepo;
     private final ShopRepo shopRepo;
-    @Override
-    public List<Shop> getShopList() {
-        return shopRepo.findAll();
-    }
 
     @Override
     public String errorCheckAccountMap(RequestLogin requestLogin) {
@@ -75,6 +70,9 @@ public class SecurityServiceImp implements SecurityService {
         if (!shopRepo.findById(requestRegister.getIdShop()).isPresent()) {
             errorMap.put("idShops", "shop non present");
         }
+        if (50 < requestRegister.getPassword().length() || requestRegister.getPassword().length() < 6) {
+            errorMap.put("password", "password must from 6 to 50 keyword");
+        }
         return errorMap;
     }
 
@@ -83,12 +81,10 @@ public class SecurityServiceImp implements SecurityService {
     public void registerUser(RequestRegister requestRegister) {
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
         Account account = new Account();
-        account.setId(null);
         account.setUserName(requestRegister.getUserName());
         account.setPassword(bc.encode(requestRegister.getPassword()));
         Account accountExist = accountRepo.save(account);
         User user = new User();
-        user.setId(null);
         user.setIdShop(requestRegister.getIdShop());
         user.setIdAccount(accountExist.getId());
         user.setName(requestRegister.getName());
@@ -114,7 +110,6 @@ public class SecurityServiceImp implements SecurityService {
     public ResponseLogin responseLogin(String userName) {
         Account account = accountRepo.findByUserName(userName).get();
         User user = userRepo.findByIdAccount(account.getId()).get();
-
         RoleUser roleUser = roleUserRepo.findByIdUser(user.getId()).get();
         Role role = roleRepo.findById(roleUser.getIdRole()).get();
         ModelMapper modelMapper = new ModelMapper();
@@ -128,6 +123,7 @@ public class SecurityServiceImp implements SecurityService {
             responseLogin.setShop(shop);
         }
         responseLogin.setRole(role.getRoleName());
+        responseLogin.setUserNameOfAccount(account.getUserName());
         return responseLogin;
     }
 }

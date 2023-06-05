@@ -1,10 +1,8 @@
 package com.example.manage_shops.jwt;
 
-import com.example.manage_shops.exception.MyAuthenticationException;
 import com.example.manage_shops.service.UserDetailsServiceImp;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +19,7 @@ import java.io.IOException;
 
 @AllArgsConstructor
 @Component
-public class AuthFilter extends OncePerRequestFilter {
+public class AuthFilter extends OncePerRequestFilter{
     public String getJwtFromRequest(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authorization");
         if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
@@ -35,10 +33,10 @@ public class AuthFilter extends OncePerRequestFilter {
     private  final UserDetailsServiceImp userDetailsServiceImp;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, UsernameNotFoundException, IOException {
         try {
             String jwt = this.getJwtFromRequest(httpServletRequest);
-            if (jwt != null && jwtUtils.validateJwt(jwt)) {
+            if (jwt != null && jwtUtils.validateJwt(jwt, httpServletResponse)) {
                 String userName = jwtUtils.getUserNameFromJwt(jwt);
                 UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(userName);
                 UsernamePasswordAuthenticationToken authenticationToken =
@@ -48,10 +46,8 @@ public class AuthFilter extends OncePerRequestFilter {
             }
         } catch (UsernameNotFoundException ex) {
             throw new UsernameNotFoundException(ex.getMessage());
-        } catch (AuthenticationException | IOException ex) {
-            throw new MyAuthenticationException(401, ex.getMessage());
         } catch (Exception ex) {
-            throw new MyAuthenticationException(500, ex.getMessage());
+            throw ex;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

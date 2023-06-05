@@ -23,12 +23,13 @@ public class Shop {
     private String name;
 
     @NotNull
-    @Size(min = 8, max = 60, message = "7 keyword < origin < 61 keyword")
+    @Size(min = 6, max = 60, message = "5 keyword < origin < 61 keyword")
     private String address;
 
     @NotNull
     @Size(min = 10, max = 15, message = "7 keyword < hotline < 61 keyword")
     private String hotline;
+
     public Shop() {
 
     }

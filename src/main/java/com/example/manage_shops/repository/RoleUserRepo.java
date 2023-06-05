@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface RoleUserRepo extends JpaRepository<RoleUser, IdRoleUser> {
     Optional<RoleUser> findByIdUser(Long userId);
+    void deleteByIdUser(Long idUser);
 }
