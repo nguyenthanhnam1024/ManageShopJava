@@ -27,7 +27,7 @@ public class ShopController {
         return ResponseEntity.ok(shopService.getAllShop());
     }
 
-    @GetMapping("/getById/{shopId}")
+    @PostMapping("/getById/{shopId}")
     public ResponseEntity<?> getShopById(@PathVariable int shopId, @RequestBody ResponseLogin responseLogin) throws MyValidateException {
         return ResponseEntity.ok(shopService.getShopById(shopId, responseLogin));
     }
@@ -53,7 +53,7 @@ public class ShopController {
         return ResponseEntity.ok(shopService.deleteShop(shopId, responseLogin));
     }
 
-    @GetMapping("/getByKeyword")
+    @PostMapping ("/getByKeyword")
     public ResponseEntity<?> getShopByKeyword(@RequestBody ResponseLogin responseLogin, @RequestParam String keyword) throws MyValidateException {
         return ResponseEntity.ok(shopService.getShopByKeyword(keyword, responseLogin));
     }
