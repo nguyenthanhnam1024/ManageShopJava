@@ -49,7 +49,7 @@ public class ShopController {
     }
 
     @DeleteMapping("/delete/{shopId}")
-    public ResponseEntity<?> deleteRole(@PathVariable int shopId, @RequestBody ResponseLogin responseLogin) throws MyValidateException{
+    public ResponseEntity<?> deleteShop(@PathVariable int shopId, @RequestBody ResponseLogin responseLogin) throws MyValidateException{
         return ResponseEntity.ok(shopService.deleteShop(shopId, responseLogin));
     }
 

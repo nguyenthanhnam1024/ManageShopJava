@@ -64,7 +64,8 @@ public class ShopServiceImp implements ShopService {
         this.validateRole(responseLogin.getRole());
         Optional<Shop> shopExist = shopRepo.findById(shop.getId());
         if (shopExist.isPresent()) {
-            if (shopExist.get().getName().equals(shop.getName())) {
+            Optional<Shop> shopOptional = shopRepo.findByName(shop.getName());
+            if (shopOptional.isPresent()) {
                 throw new MyValidateException("shop have been exist");
             }
             try {
