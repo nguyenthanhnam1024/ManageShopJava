@@ -36,14 +36,14 @@ public class SecurityController {
         if (error != null) {
             return ResponseEntity.status(1000).body(error);
         }
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestLogin.getUserName(),
-                            requestLogin.getPassword()
-                    )
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwt((UserDetailsImp) authentication.getPrincipal());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        requestLogin.getUserName(),
+                        requestLogin.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwt((UserDetailsImp) authentication.getPrincipal());
         response.addHeader("Authorization", "Bearer " + jwt);
         return ResponseEntity.ok(securityService.responseLogin(requestLogin.getUserName()));
     }

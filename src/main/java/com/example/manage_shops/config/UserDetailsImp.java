@@ -32,6 +32,7 @@ public class UserDetailsImp implements UserDetails {
         this.userName = userName;
         this.passWord = passWord;
         this.shopId = shopId;
+        this.authorities = new ArrayList<>();
         this.authorities.add(new SimpleGrantedAuthority(roleName));
         return this;
     }

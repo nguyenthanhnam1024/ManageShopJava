@@ -2,6 +2,7 @@ package com.example.manage_shops.service;
 
 import com.example.manage_shops.entity.Shop;
 import com.example.manage_shops.exception.MyValidateException;
+import com.example.manage_shops.jwt.ExtractDataFromJwt;
 import com.example.manage_shops.my_enum.RoleEnum;
 import com.example.manage_shops.repository.ShopRepo;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class Commons {
     private final ShopRepo shopRepo;
+    private final ExtractDataFromJwt extractDataFromJwt;
 
     public Map<String, String> handleExceptionInBindingResult(BindingResult result) {
         Map<String, String> errorValidateMap = new HashMap<>();
@@ -41,17 +44,20 @@ public class Commons {
         }
     }
 
-    public void validateRole(List<String> roleNameList, String roleNameOfUser) throws MyValidateException {
-        for (String roleName: roleNameList) {
-            if (roleName.equals(roleNameOfUser)) {
+    public void validateRole(HttpServletRequest httpServletRequest, List<String> roleNameListLicensed) throws MyValidateException {
+        List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
+        for (String roleNameOfUser: roles) {
+            if (roleNameListLicensed.contains(roleNameOfUser)) {
                 return;
             }
         }
         throw new MyValidateException("you do not have permission to perform this function");
     }
-    public void validateRoleForADMIN(String roleNameOfUser) throws MyValidateException {
-        if (roleNameOfUser != null && !roleNameOfUser.equals("")) {
-            if (RoleEnum.ADMIN.getRoleName().equals(roleNameOfUser)) {
+
+    public void validateRoleForADMIN(HttpServletRequest httpServletRequest) throws MyValidateException {
+        List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
+        for (String roleName : roles) {
+            if (RoleEnum.ADMIN.getRoleName().equals(roleName)) {
                 return;
             }
         }

@@ -2,15 +2,16 @@ package com.example.manage_shops.service;
 
 import com.example.manage_shops.entity.Role;
 import com.example.manage_shops.exception.MyValidateException;
-import com.example.manage_shops.request.RequestRole;
-import com.example.manage_shops.response.ResponseLogin;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface RoleService {
-    List<Role> getAllRole(ResponseLogin responseLogin) throws MyValidateException;
+    List<Role> getAllRole(HttpServletRequest httpServletRequest) throws MyValidateException;
 
-    List<String> getListRoleName(ResponseLogin responseLogin) throws MyValidateException;
+    List<String> getListRoleName(HttpServletRequest httpServletRequest) throws MyValidateException;
 
-    void saveRole(RequestRole requestRole) throws MyValidateException;
+    Role saveRole(HttpServletRequest httpServletRequest, Role role) throws MyValidateException;
+
+    void deleteRole(HttpServletRequest httpServletRequest, int roleId) throws MyValidateException;
 }

@@ -6,19 +6,21 @@ import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
-     List<User> getAllUser(ResponseLogin responseLogin) throws MyValidateException;
+     List<User> getAllUser(HttpServletRequest httpServletRequest, int idShop) throws MyValidateException;
 
-     Map<String, String> errorCheckRequestRegisterFromADMINMap(RequestUser requestUser);
+     RequestUser getById(HttpServletRequest httpServletRequest, long idUser) throws MyValidateException;
 
-     void saveUserFromADMIN(RequestUser requestUser) throws MyValidateException;
+     void saveUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
      ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException;
 
-     User updateUserFromADMIN(RequestUser requestUser) throws MyValidateException;
+     User updateUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
-     List<User> searchUserByKeyword(String keyword, String roleName, ResponseLogin responseLogin) throws MyValidateException;
+     List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException;
+
+     void deleteUser(HttpServletRequest httpServletRequest, Long idUser) throws MyValidateException;
 }

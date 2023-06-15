@@ -18,6 +18,8 @@ public class JwtUtils {
     public String generateJwt(UserDetailsImp userDetailsImp) {
         return Jwts.builder()
                 .setSubject(userDetailsImp.getUsername())
+                .claim("idShop", userDetailsImp.getShopId())
+                .claim("roles", userDetailsImp.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + 3600000L))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
