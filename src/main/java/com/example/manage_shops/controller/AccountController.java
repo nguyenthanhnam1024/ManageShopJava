@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -21,17 +22,15 @@ public class AccountController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateAccount(@Valid @RequestBody RequestAccount requestAccount, BindingResult result) throws MyValidateException {
-        Map<String, String> errors = commons.handleExceptionInBindingResult(result);
-        if (!errors.isEmpty()) {
-            return ResponseEntity.status(400).body(errors);
+        Map<String, String> errors = new HashMap<>();
+        if (requestAccount.getOldPassword().equals(requestAccount.getNewPassword())) {
+            errors.put("newPassword", "new password must be other old password");
         }
-        try {
-            accountService.updateAccount(requestAccount);
-        } catch (MyValidateException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new RuntimeException("can not update account");
+        if (result.hasErrors() || !errors.isEmpty()) {
+            errors.putAll(commons.handleExceptionInBindingResult(result));
+            return ResponseEntity.status(1000).body(errors);
         }
+        accountService.updateAccount(requestAccount);
         return ResponseEntity.ok().build();
     }
 

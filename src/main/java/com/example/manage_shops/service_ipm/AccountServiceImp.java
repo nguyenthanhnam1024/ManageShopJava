@@ -23,6 +23,7 @@ public class AccountServiceImp implements AccountService {
     private final RoleUserRepo roleUserRepo;
 
     @Override
+    @Transactional
     public void updateAccount(RequestAccount requestAccount) throws MyValidateException {
         Optional<Account> accountOptional = accountRepo.findByUserName(requestAccount.getUserNameOfAccount());
         if (accountOptional.isPresent()) {
@@ -35,7 +36,11 @@ public class AccountServiceImp implements AccountService {
                         account.setId(accountOptional.get().getId());
                         account.setUserName(requestAccount.getUserNameOfAccount());
                         account.setPassword(bc.encode(requestAccount.getNewPassword()));
-                        accountRepo.save(account);
+                        try {
+                            accountRepo.save(account);
+                        } catch (Exception ex) {
+                            throw new MyValidateException("cant not update Account");
+                        }
                         return;
                     }
                     throw new MyValidateException("User and account do not match");

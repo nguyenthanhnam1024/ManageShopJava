@@ -67,11 +67,13 @@ public class SecurityServiceImp implements SecurityService {
         if (userRepo.findByName(requestRegister.getName()).isPresent()) {
             errorMap.put("names", "user name is present");
         }
-        if (!shopRepo.findById(requestRegister.getIdShop()).isPresent()) {
+        if (!shopRepo.findById(requestRegister.getIdShop()).isPresent() && requestRegister.getIdShop() != 0) {
             errorMap.put("idShops", "shop non present");
         }
-        if (50 < requestRegister.getPassword().length() || requestRegister.getPassword().length() < 6) {
-            errorMap.put("password", "password must from 6 to 50 keyword");
+        if (requestRegister.getPassword() != null) {
+            if (50 < requestRegister.getPassword().length() || requestRegister.getPassword().length() < 6) {
+                errorMap.put("password", "password must from 6 to 50 keyword");
+            }
         }
         return errorMap;
     }

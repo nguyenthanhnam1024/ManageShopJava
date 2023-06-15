@@ -3,12 +3,12 @@ package com.example.manage_shops.service_ipm;
 import com.example.manage_shops.entity.Shop;
 import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.repository.ShopRepo;
-import com.example.manage_shops.response.ResponseLogin;
 import com.example.manage_shops.service.Commons;
 import com.example.manage_shops.service.ShopService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,15 +19,7 @@ public class ShopServiceImp implements ShopService {
     private  final ShopRepo shopRepo;
 
     @Override
-    public void validateRole(String roleName) throws MyValidateException {
-        if (roleName == null || roleName.equals("")) {
-            throw new MyValidateException("you do not have permission to perform this function");
-        }
-        commons.validateRoleForADMIN(roleName);
-    }
-
-    @Override
-    public List<Shop> getAllShop() throws MyValidateException {
+    public List<Shop> getAllShop(HttpServletRequest httpServletRequest) throws MyValidateException {
         try {
             return shopRepo.findAll();
         } catch (Exception ex) {
@@ -36,8 +28,8 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public Shop getShopById(int shopId, ResponseLogin responseLogin) throws MyValidateException {
-        this.validateRole(responseLogin.getRole());
+    public Shop getShopById(HttpServletRequest httpServletRequest, int shopId) throws MyValidateException {
+        commons.validateRoleForADMIN(httpServletRequest);
         Optional<Shop> shopExist = shopRepo.findById(shopId);
         if (shopExist.isPresent()) {
                 return shopExist.get();
@@ -46,8 +38,8 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public Shop saveShop(Shop shop, ResponseLogin responseLogin) throws MyValidateException {
-        this.validateRole(responseLogin.getRole());
+    public Shop saveShop(HttpServletRequest httpServletRequest, Shop shop) throws MyValidateException {
+        commons.validateRoleForADMIN(httpServletRequest);
         Optional<Shop> shopExist = shopRepo.findByName(shop.getName());
         if (!shopExist.isPresent()) {
             try {
@@ -60,8 +52,8 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public Shop updateShop(Shop shop, ResponseLogin responseLogin) throws MyValidateException {
-        this.validateRole(responseLogin.getRole());
+    public Shop updateShop(HttpServletRequest httpServletRequest, Shop shop) throws MyValidateException {
+        commons.validateRoleForADMIN(httpServletRequest);
         Optional<Shop> shopExist = shopRepo.findById(shop.getId());
         if (shopExist.isPresent()) {
             Optional<Shop> shopOptional = shopRepo.findByName(shop.getName());
@@ -78,8 +70,8 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public Shop deleteShop(int shopId, ResponseLogin responseLogin) throws MyValidateException {
-        this.validateRole(responseLogin.getRole());
+    public Shop deleteShop(HttpServletRequest httpServletRequest, int shopId) throws MyValidateException {
+        commons.validateRoleForADMIN(httpServletRequest);
         Optional<Shop> optionalShop = shopRepo.findById(shopId);
         if (!optionalShop.isPresent()) {
             throw new MyValidateException("can't found this shop to delete");
@@ -93,11 +85,11 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public List<Shop> getShopByKeyword(String keyword, ResponseLogin responseLogin) throws MyValidateException {
+    public List<Shop> getShopByKeyword(HttpServletRequest httpServletRequest, String keyword) throws MyValidateException {
         if (keyword == null || keyword.equals("")) {
             throw new MyValidateException("keyword must be different null and blank");
         }
-        this.validateRole(responseLogin.getRole());
+        commons.validateRoleForADMIN(httpServletRequest);
         try {
             return shopRepo.findByNameContainingIgnoreCase(keyword);
         } catch (Exception ex) {

@@ -15,7 +15,7 @@ public class RequestAccount {
     @NotBlank(message = "account unknown")
     private String userNameOfAccount;
 
-    @NotBlank(message = "account unknown")
+    @NotBlank(message = "old password wrong")
     private String oldPassword;
 
     @Size(min = 6, max = 50, message = "password from 6 to 50 keyword")
