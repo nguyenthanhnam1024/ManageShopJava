@@ -32,6 +32,7 @@ public class UserServiceIpm implements UserService {
     private final ShopRepo shopRepo;
     private final Commons commons;
     private final ExtractDataFromJwt extractDataFromJwt;
+    private final UserRepository userRepository;
 
     @Override
     public List<User> getAllUser(HttpServletRequest httpServletRequest, int idShop) throws MyValidateException {
@@ -178,28 +179,29 @@ public class UserServiceIpm implements UserService {
         List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
         for (String roleNameFromJwt : roles) {
             if (RoleEnum.ADMIN.getRoleName().equals(roleNameFromJwt)) {
-                try {
-                    if (roleName !=null && !roleName.equals("")) {
-                        if (keyword == null || keyword.equals("")) {
-                            return userRepo.searchUserByRole(roleName);
-                        }
-                        return userRepo.searchUserByKeywordAndRole(keyword, roleName);
-                    }
-                    return userRepo.searchUserByKeyword(keyword);
-                } catch (Exception ex) {
-                    throw new MyValidateException("get list user failure");
-                }
+//                try {
+//                    if (roleName !=null && !roleName.equals("")) {
+//                        if (keyword == null || keyword.equals("")) {
+//                            return userRepo.searchUserByRole(roleName);
+//                        }
+//                        return userRepo.searchUserByKeywordAndRole(keyword, roleName);
+//                    }
+//                    return userRepo.searchUserByKeyword(keyword);
+//                } catch (Exception ex) {
+//                    throw new MyValidateException("get list user failure");
+//                }
+                return userRepository.getUser(keyword, roleName);
             }
-            if (RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
-                try {
-                    return userRepo.searchUserByKeywordAndIdShop(keyword, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
-                } catch (Exception ex) {
-                    throw new MyValidateException("get list user failure");
-                }
-            }
+//            if (RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
+//                try {
+//                    return userRepo.searchUserByKeywordAndIdShop(keyword, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
+//                } catch (Exception ex) {
+//                    throw new MyValidateException("get list user failure");
+//                }
+//            }
             throw new MyValidateException("you do not have permission to perform this function");
         }
-        return new ArrayList<>();
+        return null;
     }
 
     @Override
