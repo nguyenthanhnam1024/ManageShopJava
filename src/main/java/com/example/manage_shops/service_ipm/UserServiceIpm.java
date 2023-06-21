@@ -5,6 +5,7 @@ import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.jwt.ExtractDataFromJwt;
 import com.example.manage_shops.my_enum.RoleEnum;
 import com.example.manage_shops.repository.*;
+import com.example.manage_shops.repository.hql.UserRepository;
 import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -115,9 +115,10 @@ public class UserServiceIpm implements UserService {
 
     @Override
     @Transactional
-    public ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException {
+    public ResponseLogin updateUser(HttpServletRequest httpServletRequest, RequestUpdateUser requestUpdateUser) throws MyValidateException {
         Optional<Shop> shopOptional = shopRepo.findById(requestUpdateUser.getShop().getId());
-        if (shopOptional.isPresent()) {
+        int idShopFromJwt = extractDataFromJwt.extractIdShopFromJwt(httpServletRequest);
+        if (shopOptional.isPresent() && idShopFromJwt  != 0 || !shopOptional.isPresent() && idShopFromJwt == 0) {
             Optional<Account> accountOptional = accountRepo.findByUserName(requestUpdateUser.getUserNameOfAccount());
             if (accountOptional.isPresent()) {
                 Optional<User> userOptional = userRepo.findByName(requestUpdateUser.getOldName());
@@ -140,7 +141,7 @@ public class UserServiceIpm implements UserService {
                 throw new MyValidateException("Your account does not exist");
             }
         }
-        throw new MyValidateException("Your shop does not exist");
+        throw new MyValidateException("Your shop as register does not exist");
     }
 
     @Override
@@ -179,29 +180,41 @@ public class UserServiceIpm implements UserService {
         List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
         for (String roleNameFromJwt : roles) {
             if (RoleEnum.ADMIN.getRoleName().equals(roleNameFromJwt)) {
-//                try {
-//                    if (roleName !=null && !roleName.equals("")) {
-//                        if (keyword == null || keyword.equals("")) {
-//                            return userRepo.searchUserByRole(roleName);
-//                        }
-//                        return userRepo.searchUserByKeywordAndRole(keyword, roleName);
-//                    }
-//                    return userRepo.searchUserByKeyword(keyword);
-//                } catch (Exception ex) {
-//                    throw new MyValidateException("get list user failure");
-//                }
-                return userRepository.getUser(keyword, roleName);
+                try {
+                    if (roleName !=null && !roleName.equals("")) {
+                        if (keyword == null || keyword.equals("")) {
+                            return userRepo.searchUserByRole(roleName);
+                        }
+                        return userRepo.searchUserByKeywordAndRole(keyword, roleName);
+                    }
+                    return userRepo.searchUserByKeyword(keyword);
+                } catch (Exception ex) {
+                    throw new MyValidateException("get list user failure");
+                }
             }
-//            if (RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
-//                try {
-//                    return userRepo.searchUserByKeywordAndIdShop(keyword, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
-//                } catch (Exception ex) {
-//                    throw new MyValidateException("get list user failure");
-//                }
-//            }
+            if (RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
+                try {
+                    return userRepo.searchUserByKeywordAndIdShop(keyword, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
+                } catch (Exception ex) {
+                    throw new MyValidateException("get list user failure");
+                }
+            }
             throw new MyValidateException("you do not have permission to perform this function");
         }
         return null;
+    }
+
+    @Override
+    public List<User> searchUserByHQL(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException {
+        commons.validateRoleForADMIN(httpServletRequest);
+        List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
+        for (String roleNameFromJwt : roles) {
+            if (RoleEnum.ADMIN.getRoleName().equals(roleNameFromJwt) || RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
+                return userRepository.getUser(keyword, roleName, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
+            }
+
+        }
+        throw new MyValidateException("you do not have permission to perform this function");
     }
 
     @Override

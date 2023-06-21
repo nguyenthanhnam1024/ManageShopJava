@@ -16,11 +16,13 @@ public interface UserService {
 
      void saveUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
-     ResponseLogin updateUser(RequestUpdateUser requestUpdateUser) throws MyValidateException;
+     ResponseLogin updateUser(HttpServletRequest httpServletRequest, RequestUpdateUser requestUpdateUser) throws MyValidateException;
 
      User updateUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
      List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException;
+
+     List<User> searchUserByHQL(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException;
 
      void deleteUser(HttpServletRequest httpServletRequest, Long idUser) throws MyValidateException;
 }

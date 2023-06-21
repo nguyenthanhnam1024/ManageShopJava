@@ -19,7 +19,7 @@ public class ShopServiceImp implements ShopService {
     private  final ShopRepo shopRepo;
 
     @Override
-    public List<Shop> getAllShop(HttpServletRequest httpServletRequest) throws MyValidateException {
+    public List<Shop> getAllShop() throws MyValidateException {
         try {
             return shopRepo.findAll();
         } catch (Exception ex) {

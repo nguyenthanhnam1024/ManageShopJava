@@ -35,7 +35,7 @@ public class Commons {
 
 
     public void validateShopForUserToQuery(int idShop, int idShopOfUser) throws MyValidateException {
-        if (idShop != idShopOfUser && idShopOfUser != 0) {
+        if (idShop != idShopOfUser && idShopOfUser != 0 || idShop == idShopOfUser && idShopOfUser == 0) {
             throw new MyValidateException("You cannot operate in the current shop");
         }
         Optional<Shop> optionalShop = shopRepo.findById(idShop);

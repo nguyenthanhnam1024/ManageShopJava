@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody RequestUpdateUser requestUpdateUser, BindingResult result) throws MyValidateException {
+    public ResponseEntity<?> updateUser(HttpServletRequest httpServletRequest, @Valid @RequestBody RequestUpdateUser requestUpdateUser, BindingResult result) throws MyValidateException {
         Map<String, String> errors = new HashMap<>();
         if (requestUpdateUser.getAge() <= 0) {
             errors.put("age", "age must be > 0");
@@ -67,7 +67,7 @@ public class UserController {
             return ResponseEntity.status(1000).body(allError);
         }
 
-        return ResponseEntity.ok(userService.updateUser(requestUpdateUser));
+        return ResponseEntity.ok(userService.updateUser(httpServletRequest, requestUpdateUser));
     }
 
     @PutMapping("/updateFromADMIN")
@@ -87,6 +87,11 @@ public class UserController {
     @GetMapping("/searchByKeyword")
     public ResponseEntity<?> getAllUser(HttpServletRequest httpServletRequest, @RequestParam("keyword") String keyword, @RequestParam("roleName") String roleName) throws MyValidateException {
         return ResponseEntity.ok(userService.searchUserByKeyword(httpServletRequest, keyword, roleName));
+    }
+
+    @GetMapping("/searchByHQL")
+    public ResponseEntity<?> getAllUserByHQL(HttpServletRequest httpServletRequest, @RequestParam("keyword") String keyword, @RequestParam("roleName") String roleName) throws MyValidateException {
+        return ResponseEntity.ok(userService.searchUserByHQL(httpServletRequest, keyword, roleName));
     }
 
     @DeleteMapping("/delete/{idUser}")

@@ -66,9 +66,6 @@ public class ProductServiceImp implements ProductService {
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
         Optional<Product> productOptional = productRepo.findById(product.getId());
         if (productOptional.isPresent()) {
-            if (productOptional.get().getName().equals(product.getName())) {
-                throw  new MyValidateException("shop have been product '"+product.getName()+"'");
-            }
             return productRepo.save(product);
         }
         throw new MyValidateException("update product failure");
@@ -82,6 +79,7 @@ public class ProductServiceImp implements ProductService {
         Optional<Product> productOptional = productRepo.findById(idProduct);
         if (productOptional.isPresent()) {
             productRepo.deleteById(idProduct);
+            return;
         }
         throw new MyValidateException("delete product failure");
     }

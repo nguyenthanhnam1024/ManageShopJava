@@ -18,7 +18,7 @@ public class RequestAccount {
     @NotBlank(message = "old password wrong")
     private String oldPassword;
 
+    @NotBlank(message = "new password wrong")
     @Size(min = 6, max = 50, message = "password from 6 to 50 keyword")
-    @NotBlank(message = "new password must not null, empty")
     private String newPassword;
 }
