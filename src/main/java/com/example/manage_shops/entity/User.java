@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
+@javax.persistence.Table(name = "User")
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor

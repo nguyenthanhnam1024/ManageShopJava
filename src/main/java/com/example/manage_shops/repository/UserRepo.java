@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Long>, CustomUserRepo {
+public interface UserRepo extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.name LIKE %:keyword%")
     List<User> searchUserByKeyword(@Param("keyword") String keyword);
 

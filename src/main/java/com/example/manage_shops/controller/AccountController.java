@@ -6,6 +6,7 @@ import com.example.manage_shops.service.AccountService;
 import com.example.manage_shops.service.Commons;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,10 @@ public class AccountController {
     @PutMapping("/update")
     public ResponseEntity<?> updateAccount(@Valid @RequestBody RequestAccount requestAccount, BindingResult result) throws MyValidateException {
         Map<String, String> errors = new HashMap<>();
-        if (requestAccount.getOldPassword().equals(requestAccount.getNewPassword())) {
-            errors.put("newPassword", "new password must be other old password");
+        if (!StringUtils.isEmpty(requestAccount.getOldPassword()) && !StringUtils.isEmpty(requestAccount.getNewPassword())) {
+            if (requestAccount.getOldPassword().equals(requestAccount.getNewPassword())) {
+                errors.put("newPassword", "new password must be other old password");
+            }
         }
         if (result.hasErrors() || !errors.isEmpty()) {
             errors.putAll(commons.handleExceptionInBindingResult(result));

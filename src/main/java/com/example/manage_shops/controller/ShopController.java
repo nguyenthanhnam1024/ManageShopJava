@@ -23,8 +23,8 @@ public class ShopController {
     }
 
     @GetMapping("/getShopList")
-    public ResponseEntity<?> getAllShop(HttpServletRequest httpServletRequest) throws MyValidateException {
-        return ResponseEntity.ok(shopService.getAllShop(httpServletRequest));
+    public ResponseEntity<?> getAllShop() throws MyValidateException {
+        return ResponseEntity.ok(shopService.getAllShop());
     }
 
     @GetMapping("/getById/{shopId}")
