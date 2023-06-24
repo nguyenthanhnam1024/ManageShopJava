@@ -2,8 +2,6 @@ package com.example.manage_shops.service;
 
 import com.example.manage_shops.entity.Shop;
 import com.example.manage_shops.exception.MyValidateException;
-import com.example.manage_shops.response.ResponseLogin;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

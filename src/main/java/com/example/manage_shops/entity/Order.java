@@ -2,6 +2,7 @@ package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -12,11 +13,12 @@ import java.time.LocalDate;
 @Entity
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "order_product")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @NotNull(message = "no date create order")
     @PastOrPresent(message = "date must be present or past")
@@ -29,13 +31,9 @@ public class Order {
     private long idSeller;
 
     @Min(value = 1, message = "product invalid")
-    private Long idProduct;
+    private long idProduct;
 
     @NotNull(message = "quantity must other null")
     @Min(value = 1, message = "quantity must be greater than 1")
     private float quantity;
-
-    public Order() {
-
-    }
 }

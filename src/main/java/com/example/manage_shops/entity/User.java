@@ -13,20 +13,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@javax.persistence.Table(name = "User")
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @NotNull(message = "shop must other null")
     private int idShop;
 
     @NotNull(message = "role must other null")
-    private Long idAccount;
+    private long idAccount;
 
     @NotNull(message = "role must other null")
     @Size(min = 2, max = 50)

@@ -62,7 +62,7 @@ public class OrderServiceImp implements OrderService {
     public ResponseOrder saveOrder(HttpServletRequest httpServletRequest, int idShop, Order order) throws MyValidateException {
         commons.validateRole(httpServletRequest, Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName(), RoleEnum.STAFF.getRoleName()));
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
-        if (order.getId() != null) {
+        if (!String.valueOf(order.getId()).isEmpty()) {
             throw new MyValidateException("request invalid");
         }
         Optional<Shop> optionalShop = shopRepo.findById(order.getIdShop());

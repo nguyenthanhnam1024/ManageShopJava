@@ -46,8 +46,6 @@ public class AuthFilter extends OncePerRequestFilter{
             }
         } catch (UsernameNotFoundException ex) {
             throw new UsernameNotFoundException(ex.getMessage());
-        } catch (Exception ex) {
-            throw ex;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
