@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class ResponseLogin {
+    private long id;
+
     private Shop shop;
 
     private String role;
