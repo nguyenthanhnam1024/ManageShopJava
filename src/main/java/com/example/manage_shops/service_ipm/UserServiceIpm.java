@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -175,14 +176,17 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException {
+    public List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName, int idShopCurrent) throws MyValidateException {
         commons.validateRoleForADMIN(httpServletRequest);
         List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
         for (String roleNameFromJwt : roles) {
             if (RoleEnum.ADMIN.getRoleName().equals(roleNameFromJwt)) {
                 try {
-                    if (roleName !=null && !roleName.equals("")) {
-                        if (keyword == null || keyword.equals("")) {
+                    if (idShopCurrent != 0) {
+                        return userRepo.searchUserByKeywordAndIdShop(keyword, idShopCurrent);
+                    }
+                    if (!StringUtils.isEmpty(roleName)) {
+                        if (StringUtils.isEmpty(keyword)) {
                             return userRepo.searchUserByRole(roleName);
                         }
                         return userRepo.searchUserByKeywordAndRole(keyword, roleName);

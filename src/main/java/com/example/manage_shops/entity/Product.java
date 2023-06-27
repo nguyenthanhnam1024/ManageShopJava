@@ -2,6 +2,8 @@ package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,10 +14,11 @@ import java.time.LocalDate;
 @Entity
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @NotBlank(message = "name product must other null")
     private String name;
@@ -41,8 +44,4 @@ public class Product {
     @NotNull(message = "origin must other null")
     @Size(min = 2, max = 50, message = "2 keyword < origin < 51 keyword")
     private String origin;
-
-    public Product() {
-
-    }
 }

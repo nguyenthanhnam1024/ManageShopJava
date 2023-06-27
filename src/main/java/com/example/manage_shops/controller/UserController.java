@@ -85,8 +85,8 @@ public class UserController {
     }
 
     @GetMapping("/searchByKeyword")
-    public ResponseEntity<?> getAllUser(HttpServletRequest httpServletRequest, @RequestParam("keyword") String keyword, @RequestParam("roleName") String roleName) throws MyValidateException {
-        return ResponseEntity.ok(userService.searchUserByKeyword(httpServletRequest, keyword, roleName));
+    public ResponseEntity<?> getAllUser(HttpServletRequest httpServletRequest, @RequestParam(value = "keyword", required = false) String keyword, @RequestParam(value = "roleName", required = false) String roleName, @RequestParam(value = "idShopCurrent", required = false) int idShopCurrent) throws MyValidateException {
+        return ResponseEntity.ok(userService.searchUserByKeyword(httpServletRequest, keyword, roleName, idShopCurrent));
     }
 
     @GetMapping("/searchByHQL")

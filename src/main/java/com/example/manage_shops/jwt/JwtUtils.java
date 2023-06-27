@@ -49,15 +49,7 @@ public class JwtUtils {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
             return true;
-        } catch (SignatureException ex) {
-            httpServletResponse.setStatus(401);
-        } catch (MalformedJwtException ex) {
-            httpServletResponse.setStatus(401);
-        } catch (ExpiredJwtException ex) {
-            httpServletResponse.setStatus(401);
-        } catch (UnsupportedJwtException ex) {
-            httpServletResponse.setStatus(401);
-        } catch (IllegalArgumentException ex) {
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             httpServletResponse.setStatus(401);
         }
         return false;

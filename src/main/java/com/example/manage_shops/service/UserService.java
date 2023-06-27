@@ -20,7 +20,7 @@ public interface UserService {
 
      User updateUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
-     List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException;
+     List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName, int idShopCurrent) throws MyValidateException;
 
      List<User> searchUserByHQL(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException;
 

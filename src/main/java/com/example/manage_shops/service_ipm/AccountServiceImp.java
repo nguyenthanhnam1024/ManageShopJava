@@ -31,7 +31,7 @@ public class AccountServiceImp implements AccountService {
             if (bc.matches(requestAccount.getOldPassword(), accountOptional.get().getPassword())) {
                 Optional<User> userOptional = userRepo.findByName(requestAccount.getNameOfUser());
                 if (userOptional.isPresent()) {
-                    if (accountOptional.get().getId().equals(userOptional.get().getIdAccount())) {
+                    if (accountOptional.get().getId() == (userOptional.get().getIdAccount())) {
                         Account account = new Account();
                         account.setId(accountOptional.get().getId());
                         account.setUserName(requestAccount.getUserNameOfAccount());
@@ -58,7 +58,7 @@ public class AccountServiceImp implements AccountService {
         if (accountOptional.isPresent()) {
             Optional<User> userOptional = userRepo.findByName(requestAccount.getNameOfUser());
             if (userOptional.isPresent()) {
-                if (accountOptional.get().getId().equals(userOptional.get().getIdAccount())) {
+                if (accountOptional.get().getId() == (userOptional.get().getIdAccount())) {
                     try {
                         roleUserRepo.deleteByIdUser(userOptional.get().getId());
                         userRepo.deleteByName(requestAccount.getNameOfUser());

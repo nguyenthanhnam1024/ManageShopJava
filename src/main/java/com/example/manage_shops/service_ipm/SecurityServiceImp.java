@@ -110,10 +110,10 @@ public class SecurityServiceImp implements SecurityService {
 
     @Override
     public ResponseLogin responseLogin(String userName) {
-        Account account = accountRepo.findByUserName(userName).get();
-        User user = userRepo.findByIdAccount(account.getId()).get();
-        RoleUser roleUser = roleUserRepo.findByIdUser(user.getId()).get();
-        Role role = roleRepo.findById(roleUser.getIdRole()).get();
+        Account account = accountRepo.findByUserName(userName).orElse(new Account());
+        User user = userRepo.findByIdAccount(account.getId()).orElse(new User());
+        RoleUser roleUser = roleUserRepo.findByIdUser(user.getId()).orElse(new RoleUser());
+        Role role = roleRepo.findById(roleUser.getIdRole()).orElse(new Role());
         ModelMapper modelMapper = new ModelMapper();
         ResponseLogin responseLogin = modelMapper.map(user, ResponseLogin.class);
         if(role.getRoleName().equals("ADMIN")) {
@@ -121,7 +121,7 @@ public class SecurityServiceImp implements SecurityService {
             shopNew.setName("Manage system shop");
             responseLogin.setShop(shopNew);
         } else {
-            Shop shop = shopRepo.findById(user.getIdShop()).get();
+            Shop shop = shopRepo.findById(user.getIdShop()).orElse(new Shop());
             responseLogin.setShop(shop);
         }
         responseLogin.setRole(role.getRoleName());

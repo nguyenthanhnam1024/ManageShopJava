@@ -2,6 +2,7 @@ package com.example.manage_shops.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +31,4 @@ public class Shop {
     @NotNull
     @Size(min = 10, max = 15, message = "7 keyword < hotline < 61 keyword")
     private String hotline;
-
-    public Shop() {
-
-    }
 }

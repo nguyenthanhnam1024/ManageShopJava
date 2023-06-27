@@ -56,9 +56,11 @@ public class ShopServiceImp implements ShopService {
         commons.validateRoleForADMIN(httpServletRequest);
         Optional<Shop> shopExist = shopRepo.findById(shop.getId());
         if (shopExist.isPresent()) {
-            Optional<Shop> shopOptional = shopRepo.findByName(shop.getName());
-            if (shopOptional.isPresent()) {
-                throw new MyValidateException("shop have been exist");
+            if (!shopExist.get().getName().equals(shop.getName())) {
+                Optional<Shop> shopOptional = shopRepo.findByName(shop.getName());
+                if (shopOptional.isPresent()) {
+                    throw new MyValidateException("shop already exist");
+                }
             }
             try {
                 return shopRepo.save(shop);

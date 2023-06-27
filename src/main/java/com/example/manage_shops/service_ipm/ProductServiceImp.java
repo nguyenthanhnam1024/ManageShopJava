@@ -66,6 +66,12 @@ public class ProductServiceImp implements ProductService {
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
         Optional<Product> productOptional = productRepo.findById(product.getId());
         if (productOptional.isPresent()) {
+            if (!productOptional.get().getName().equals(product.getName())) {
+                Optional<Product> optionalProduct = productRepo.findByName(product.getName());
+                if (optionalProduct.isPresent()) {
+                    throw new MyValidateException("product already exists");
+                }
+            }
             return productRepo.save(product);
         }
         throw new MyValidateException("update product failure");
