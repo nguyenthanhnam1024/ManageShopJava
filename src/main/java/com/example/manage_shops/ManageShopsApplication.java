@@ -60,6 +60,8 @@ public class ManageShopsApplication {
 		userRepo.save(user);
 		Role role = new Role(1, "ADMIN");
 		roleRepo.save(role);
+		roleRepo.save(new Role(2, "MANAGE"));
+		roleRepo.save(new Role(3, "STAFF"));
 		IdRoleUser idRoleUser = new IdRoleUser(1L, 1);
 		RoleUser roleUser = new RoleUser();
 		roleUser.setIdUser(idRoleUser.getIdUser());

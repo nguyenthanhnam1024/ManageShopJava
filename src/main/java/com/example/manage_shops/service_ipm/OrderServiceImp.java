@@ -48,7 +48,7 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public ResponseOrder getOrderById(HttpServletRequest httpServletRequest, int idShop, Long idOrder) throws MyValidateException {
-        commons.validateRole(httpServletRequest, Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName()));
+        commons.validateRole(httpServletRequest, Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName(), RoleEnum.STAFF.getRoleName()));
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
         Optional<Order> optionalOrder = orderRepo.findById(idOrder);
         if (optionalOrder.isPresent()) {
