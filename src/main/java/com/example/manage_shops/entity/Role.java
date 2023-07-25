@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -20,7 +20,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull(message = "role must other null")
-    @Size(min = 1, max = 15, message = "0 keyword < origin < 16 keyword")
+    @NotBlank(message = "role must other null and blank")
+    @Size(min = 1, max = 15, message = "role name must from 1 to 15 keyword")
     private String roleName;
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -32,16 +34,28 @@ public class OrderController {
 
     @PostMapping("/save/{idShop}")
     public ResponseEntity<?> saveOrder(HttpServletRequest httpServletRequest, @PathVariable int idShop,@Valid @RequestBody Order order, BindingResult result) throws MyValidateException {
-        if (result.hasErrors()) {
-            return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
+        Map<String, String> mapError = new HashMap<>();
+        if (order.getIdProduct() < 1) {
+            mapError.put("product", "please choose again product");
+        }
+        if (result.hasErrors() || !mapError.isEmpty()) {
+            Map<String, String> mapBindingError = commons.handleExceptionInBindingResult(result);
+            mapBindingError.putAll(mapError);
+            return ResponseEntity.status(1000).body(mapBindingError);
         }
         return ResponseEntity.ok(orderService.saveOrder(httpServletRequest,idShop, order));
     }
 
     @PutMapping("/update/{idShop}")
     public ResponseEntity<?> updateOrder(HttpServletRequest httpServletRequest, @PathVariable int idShop, @Valid @RequestBody Order order, BindingResult result) throws MyValidateException {
-        if (result.hasErrors()) {
-            return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
+        Map<String, String> mapError = new HashMap<>();
+        if (order.getIdProduct() < 1) {
+            mapError.put("product", "please choose again product");
+        }
+        if (result.hasErrors() || !mapError.isEmpty()) {
+            Map<String, String> mapBindingError = commons.handleExceptionInBindingResult(result);
+            mapBindingError.putAll(mapError);
+            return ResponseEntity.status(1000).body(mapBindingError);
         }
         return ResponseEntity.ok(orderService.updateOrder(httpServletRequest,idShop, order));
     }

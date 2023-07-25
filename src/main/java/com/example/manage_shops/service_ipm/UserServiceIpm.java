@@ -5,7 +5,6 @@ import com.example.manage_shops.exception.MyValidateException;
 import com.example.manage_shops.jwt.ExtractDataFromJwt;
 import com.example.manage_shops.my_enum.RoleEnum;
 import com.example.manage_shops.repository.*;
-import com.example.manage_shops.repository.hql.UserRepository;
 import com.example.manage_shops.request.RequestUpdateUser;
 import com.example.manage_shops.request.RequestUser;
 import com.example.manage_shops.response.ResponseLogin;
@@ -33,7 +32,6 @@ public class UserServiceIpm implements UserService {
     private final ShopRepo shopRepo;
     private final Commons commons;
     private final ExtractDataFromJwt extractDataFromJwt;
-    private final UserRepository userRepository;
 
     @Override
     public List<User> getAllUser(HttpServletRequest httpServletRequest, int idShop) throws MyValidateException {
@@ -88,15 +86,20 @@ public class UserServiceIpm implements UserService {
 
     @Override
     @Transactional
-    public void saveUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException {
-        commons.validateRoleForADMIN(httpServletRequest);
+    public void saveUserFromADMINAndManage(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException {
+        commons.validateRole(httpServletRequest, Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName()));
+        int idShopOfUser = extractDataFromJwt.extractIdShopFromJwt(httpServletRequest);
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
         Account account = new Account();
         account.setUserName(requestUser.getUserName());
         account.setPassword(bc.encode(requestUser.getPassword()));
         Account accountExist = accountRepo.save(account);
         User user = new User();
-        user.setIdShop(requestUser.getIdShop());
+        if (idShopOfUser == 0) {
+            user.setIdShop(requestUser.getIdShop());
+        } else {
+            user.setIdShop(idShopOfUser);
+        }
         user.setIdAccount(accountExist.getId());
         user.setName(requestUser.getName());
         user.setAge(requestUser.getAge());
@@ -104,14 +107,21 @@ public class UserServiceIpm implements UserService {
         user.setPhoneNumber(requestUser.getPhoneNumber());
         user.setAddress(requestUser.getAddress());
         User userExist = userRepo.save(user);
-        Optional<Role> roleExistPresent = roleRepo.findByRoleName(requestUser.getRoleName());
-        if (!roleExistPresent.isPresent()) {
-            throw new MyValidateException("create user to role no exist");
+        if (idShopOfUser == 0) {
+            Optional<Role> roleExistPresent = roleRepo.findByRoleName(requestUser.getRoleName());
+            if (!roleExistPresent.isPresent()) {
+                throw new MyValidateException("create user to role no exist");
+            }
+            RoleUser roleUser = new RoleUser();
+            roleUser.setIdRole(roleExistPresent.get().getId());
+            roleUser.setIdUser(userExist.getId());
+            roleUserRepo.save(roleUser);
+        } else {
+            RoleUser roleUser = new RoleUser();
+            roleUser.setIdRole(RoleEnum.MANAGE.getRoleId());
+            roleUser.setIdUser(userExist.getId());
+            roleUserRepo.save(roleUser);
         }
-        RoleUser roleUser = new RoleUser();
-        roleUser.setIdRole(roleExistPresent.get().getId());
-        roleUser.setIdUser(userExist.getId());
-        roleUserRepo.save(roleUser);
     }
 
     @Override
@@ -122,7 +132,7 @@ public class UserServiceIpm implements UserService {
         if (shopOptional.isPresent() && idShopFromJwt  != 0 || !shopOptional.isPresent() && idShopFromJwt == 0) {
             Optional<Account> accountOptional = accountRepo.findByUserName(requestUpdateUser.getUserNameOfAccount());
             if (accountOptional.isPresent()) {
-                Optional<User> userOptional = userRepo.findByName(requestUpdateUser.getOldName());
+                Optional<User> userOptional = userRepo.findByIdAccount(accountOptional.get().getId());
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     ModelMapper modelMapper = new ModelMapper();
@@ -136,7 +146,7 @@ public class UserServiceIpm implements UserService {
                     modelMapper.map(user, responseLogin);
                     return responseLogin;
                 } else {
-                    throw new MyValidateException("Your info old does not exist to update");
+                    throw new MyValidateException("Your profile does not exist to update");
                 }
             } else {
                 throw new MyValidateException("Your account does not exist");
@@ -153,7 +163,7 @@ public class UserServiceIpm implements UserService {
         if (shopOptional.isPresent()) {
             Optional<Role> roleOptional = roleRepo.findByRoleName(requestUser.getRoleName());
             if (roleOptional.isPresent()) {
-                Optional<User> userOptional = userRepo.findByName(requestUser.getName());
+                Optional<User> userOptional = userRepo.findByNameAndIdShop(requestUser.getName(), requestUser.getIdShop());
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     user.setIdShop(requestUser.getIdShop());
@@ -177,7 +187,6 @@ public class UserServiceIpm implements UserService {
 
     @Override
     public List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName, int idShopCurrent) throws MyValidateException {
-        commons.validateRoleForADMIN(httpServletRequest);
         List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
         for (String roleNameFromJwt : roles) {
             if (RoleEnum.ADMIN.getRoleName().equals(roleNameFromJwt)) {
@@ -195,46 +204,33 @@ public class UserServiceIpm implements UserService {
                 } catch (Exception ex) {
                     throw new MyValidateException("get list user failure");
                 }
-            }
-            if (RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
+            } else {
                 try {
                     return userRepo.searchUserByKeywordAndIdShop(keyword, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
                 } catch (Exception ex) {
                     throw new MyValidateException("get list user failure");
                 }
             }
-            throw new MyValidateException("you do not have permission to perform this function");
         }
         return null;
-    }
-
-    @Override
-    public List<User> searchUserByHQL(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException {
-        commons.validateRoleForADMIN(httpServletRequest);
-        List<String> roles = extractDataFromJwt.extractRoleNamesFromJwt(httpServletRequest);
-        for (String roleNameFromJwt : roles) {
-            if (RoleEnum.ADMIN.getRoleName().equals(roleNameFromJwt) || RoleEnum.MANAGE.getRoleName().equals(roleNameFromJwt)) {
-                return userRepository.getUser(keyword, roleName, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
-            }
-
-        }
-        throw new MyValidateException("you do not have permission to perform this function");
     }
 
     @Override
     @Transactional
     public void deleteUser(HttpServletRequest httpServletRequest, Long idUser) throws MyValidateException {
         commons.validateRole(httpServletRequest, Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName()));
-        try {
-            Optional<User> userOptional = userRepo.findById(idUser);
-            if (userOptional.isPresent()) {
+        Optional<User> userOptional = userRepo.findById(idUser);
+        if (userOptional.isPresent()) {
+            int idShopFromJwt = extractDataFromJwt.extractIdShopFromJwt(httpServletRequest);
+            if (idShopFromJwt == 0 || idShopFromJwt == userOptional.get().getIdShop()) {
                 userRepo.deleteById(idUser);
                 accountRepo.deleteById(userOptional.get().getIdAccount());
                 roleUserRepo.deleteByIdUser(userOptional.get().getId());
+                return;
             }
-        } catch (Exception ex) {
-            throw new MyValidateException("delete user failure");
+            throw new MyValidateException("only delete user in shop of you");
         }
+        throw new MyValidateException("delete user failure");
     }
 
 }

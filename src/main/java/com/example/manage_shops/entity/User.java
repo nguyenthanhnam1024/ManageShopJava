@@ -8,9 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
 @Data
@@ -21,28 +19,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull(message = "shop must other null")
+    @NotNull(message = "unknown shop")
     private int idShop;
 
-    @NotNull(message = "role must other null")
+    @NotNull(message = "unknown account")
     private long idAccount;
 
     @NotNull(message = "role must other null")
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 50, message = "name must from 6 to 60 keyword")
     private String name;
 
-    @NotNull(message = "role must other null")
+    @NotNull(message = "age must other null")
+    @Min(value = 6, message = "age appropriate from 6 to 120")
+    @Max(value = 120, message = "age appropriate from 6 to 120")
     private int age;
 
-    @NotNull(message = "role must other null")
-    @Email(message = "email ")
+    @NotBlank(message = "email must other null and blank")
+    @Email(message = "email invalid")
     private String email;
 
-    @NotNull(message = "role must other null")
-    @Size(min = 10, max = 15, message = "9 keyword < origin < 16 keyword")
+    @NotBlank(message = "phone number must other null and blank")
+    @Size(min = 10, max = 10, message = "phone number invalid")
     private String phoneNumber;
 
-    @NotNull(message = "role must other null")
-    @Size(min = 6, max = 60, message = "5 keyword < origin < 61 keyword")
+    @NotNull(message = "address must other null")
+    @Size(min = 6, max = 60, message = "address must from 6 to 60 keyword")
     private String address;
 }

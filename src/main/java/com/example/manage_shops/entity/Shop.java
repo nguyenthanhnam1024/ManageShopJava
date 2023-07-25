@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,15 +21,15 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull(message = "role must other null")
-    @Size(min = 2, max = 50, message = "1 keyword < origin < 51 keyword")
+    @NotBlank(message = "name must other null and blank")
+    @Size(min = 2, max = 50, message = "role must from 2 to 50 keyword")
     private String name;
 
-    @NotNull
-    @Size(min = 6, max = 60, message = "5 keyword < origin < 61 keyword")
+    @NotNull(message = "address must other null")
+    @Size(min = 6, max = 60, message = "address must from 6 to 60 keyword")
     private String address;
 
-    @NotNull
-    @Size(min = 10, max = 15, message = "7 keyword < hotline < 61 keyword")
+    @NotBlank(message = "hotline must other null and blank")
+    @Size(min = 10, max = 10, message = "hotline invalid")
     private String hotline;
 }

@@ -4,45 +4,46 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @AllArgsConstructor
 @Data
 @RequiredArgsConstructor
 public class RequestUser {
-    @NotBlank(message = "user name is null")
+    @NotBlank(message = "user name is null and blank")
     @Size(min = 2, max = 50)
     private String userName;
 
-    @NotBlank(message = "password is null")
+    @NotNull(message = "password must other null")
+    @Size(min = 6, max = 50, message = "password must from 6 to 50 keyword")
     private String password;
 
     @NotNull(message = "shop must other null")
+    @Min(value = 1, message = "shop invalid")
     private int idShop;
 
-    @NotNull(message = "shop must other null")
+    @NotBlank(message = "role name must other null and blank")
     private String roleName;
 
-    @NotBlank(message = "full name must other null")
-    @Size(min = 2, max = 50)
+    @NotNull(message = "full name must other null")
+    @Size(min = 2, max = 50, message = "name from 2 to 50 keyword")
     private String name;
 
     @NotNull(message = "age must other null")
+    @Min(value = 6, message = "age appropriate from 6 to 120")
+    @Max(value = 120, message = "age appropriate from 6 to 120")
     private int age;
 
-    @NotNull(message = "phone number must other null")
-    @Size(min = 10, max = 15, message = "9 keyword < origin < 16 keyword")
+    @NotBlank(message = "phone number must other null and blank")
+    @Size(min = 10, max = 10, message = "phone number invalid")
     private String phoneNumber;
 
 
-    @NotBlank(message = "email must other null")
+    @NotBlank(message = "email must other null and blank")
     @Email(message = "email invalid")
     private String email;
 
-    @NotBlank(message = "address must other null")
-    @Size(min = 6, max = 60, message = "5 keyword < origin < 61 keyword")
+    @NotNull(message = "address must other null")
+    @Size(min = 6, max = 60, message = "address must from 6 to 60 keyword")
     private String address;
 }

@@ -14,15 +14,13 @@ public interface UserService {
 
      RequestUser getById(HttpServletRequest httpServletRequest, long idUser) throws MyValidateException;
 
-     void saveUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
+     void saveUserFromADMINAndManage(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
      ResponseLogin updateUser(HttpServletRequest httpServletRequest, RequestUpdateUser requestUpdateUser) throws MyValidateException;
 
      User updateUserFromADMIN(HttpServletRequest httpServletRequest, RequestUser requestUser) throws MyValidateException;
 
      List<User> searchUserByKeyword(HttpServletRequest httpServletRequest, String keyword, String roleName, int idShopCurrent) throws MyValidateException;
-
-     List<User> searchUserByHQL(HttpServletRequest httpServletRequest, String keyword, String roleName) throws MyValidateException;
 
      void deleteUser(HttpServletRequest httpServletRequest, Long idUser) throws MyValidateException;
 }

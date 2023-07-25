@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ShopRepo extends JpaRepository<Shop, Integer> {
     Optional<Shop> findByName(String shopName);
-
     List<Shop> findByNameContainingIgnoreCase(String keyword);
+    Optional<Shop> findByHotline(String hotline);
 }

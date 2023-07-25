@@ -58,14 +58,14 @@ public class SecurityServiceImp implements SecurityService {
     @Override
     public Map<String, String> errorCheckRequestRegisterMap(RequestRegister requestRegister) {
         Map<String, String> errorMap = new HashMap<>();
-        if (requestRegister.getAge() <= 0 || requestRegister.getAge() > 150) {
-            errorMap.put("age", "0 < age < 150");
+        if (requestRegister.getAge() <= 5 || requestRegister.getAge() > 120) {
+            errorMap.put("age", "age must from 6 to 120");
         }
         if (accountRepo.findByUserName(requestRegister.getUserName()).isPresent()) {
-            errorMap.put("userNames", "Account is present");
+            errorMap.put("userNames", "Account already present");
         }
-        if (userRepo.findByName(requestRegister.getName()).isPresent()) {
-            errorMap.put("names", "user name is present");
+        if (userRepo.findByNameAndIdShop(requestRegister.getName(), requestRegister.getIdShop()).isPresent()) {
+            errorMap.put("names", "user name  present");
         }
         if (!shopRepo.findById(requestRegister.getIdShop()).isPresent() && requestRegister.getIdShop() != 0) {
             errorMap.put("idShops", "shop non present");

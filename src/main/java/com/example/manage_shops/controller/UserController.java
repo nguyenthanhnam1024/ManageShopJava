@@ -51,7 +51,7 @@ public class UserController {
             allError.putAll(errors);
             return ResponseEntity.status(1000).body(allError);
         }
-        userService.saveUserFromADMIN(httpServletRequest, requestUser);
+        userService.saveUserFromADMINAndManage(httpServletRequest, requestUser);
         return ResponseEntity.ok().build();
     }
 
@@ -59,7 +59,10 @@ public class UserController {
     public ResponseEntity<?> updateUser(HttpServletRequest httpServletRequest, @Valid @RequestBody RequestUpdateUser requestUpdateUser, BindingResult result) throws MyValidateException {
         Map<String, String> errors = new HashMap<>();
         if (requestUpdateUser.getAge() <= 0) {
-            errors.put("age", "age must be > 0");
+            errors.put("age", "age must from 6 to 120");
+        }
+        if (commons.validateEmail(requestUpdateUser.getEmail())) {
+            errors.put("email", "email invalid");
         }
         if (result.hasErrors() || !errors.isEmpty()) {
             Map<String, String> allError = commons.handleExceptionInBindingResult(result);
@@ -85,13 +88,8 @@ public class UserController {
     }
 
     @GetMapping("/searchByKeyword")
-    public ResponseEntity<?> getAllUser(HttpServletRequest httpServletRequest, @RequestParam(value = "keyword", required = false) String keyword, @RequestParam(value = "roleName", required = false) String roleName, @RequestParam(value = "idShopCurrent", required = false) int idShopCurrent) throws MyValidateException {
+    public ResponseEntity<?> searchByKeyword(HttpServletRequest httpServletRequest, @RequestParam(value = "keyword", required = false) String keyword, @RequestParam(value = "roleName", required = false) String roleName, @RequestParam(value = "idShopCurrent", required = false) int idShopCurrent) throws MyValidateException {
         return ResponseEntity.ok(userService.searchUserByKeyword(httpServletRequest, keyword, roleName, idShopCurrent));
-    }
-
-    @GetMapping("/searchByHQL")
-    public ResponseEntity<?> getAllUserByHQL(HttpServletRequest httpServletRequest, @RequestParam("keyword") String keyword, @RequestParam("roleName") String roleName) throws MyValidateException {
-        return ResponseEntity.ok(userService.searchUserByHQL(httpServletRequest, keyword, roleName));
     }
 
     @DeleteMapping("/delete/{idUser}")

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/shop")
@@ -34,16 +36,32 @@ public class ShopController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveShop(HttpServletRequest httpServletRequest, @Valid @RequestBody Shop shop, BindingResult result) throws MyValidateException {
-        if (result.hasErrors()) {
-            return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
+        Map<String, String> mapError = new HashMap<>();
+        if (shop.getHotline() != null) {
+            if (!shop.getHotline().matches("0\\d*")) {
+                mapError.put("hotline", "hotline invalid");
+            }
+        }
+        if (result.hasErrors() || !mapError.isEmpty()) {
+            Map<String, String> mapBindingError = commons.handleExceptionInBindingResult(result);
+            mapBindingError.putAll(mapError);
+            return ResponseEntity.status(1000).body(mapBindingError);
         }
         return ResponseEntity.ok(shopService.saveShop(httpServletRequest, shop));
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateShop(HttpServletRequest httpServletRequest, @Valid @RequestBody Shop shop, BindingResult result) throws MyValidateException {
-        if (result.hasErrors()) {
-            return ResponseEntity.status(1000).body(commons.handleExceptionInBindingResult(result));
+        Map<String, String> mapError = new HashMap<>();
+        if (shop.getHotline() != null) {
+            if (!shop.getHotline().matches("0\\d*")) {
+                mapError.put("hotline", "hotline invalid");
+            }
+        }
+        if (result.hasErrors() || !mapError.isEmpty()) {
+            Map<String, String> mapBindingError = commons.handleExceptionInBindingResult(result);
+            mapBindingError.putAll(mapError);
+            return ResponseEntity.status(1000).body(mapBindingError);
         }
         return ResponseEntity.ok(shopService.updateShop(httpServletRequest, shop));
     }

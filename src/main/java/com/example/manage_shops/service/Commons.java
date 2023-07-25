@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +33,6 @@ public class Commons {
         }
         return errorValidateMap;
     }
-
 
     public void validateShopForUserToQuery(int idShop, int idShopOfUser) throws MyValidateException {
         if (idShop != idShopOfUser && idShopOfUser != 0 || idShop == idShopOfUser && idShopOfUser == 0) {
@@ -62,5 +62,10 @@ public class Commons {
             }
         }
         throw new MyValidateException("you do not have permission to perform this function");
+    }
+
+    public boolean validateEmail(String email) {
+        String EMAIL_PATTERN = "^(?=.{1,64}@)[\\\\p{L}0-9_-]+(\\\\.[\\\\p{L}0-9_-]+)*@[^-][\\\\p{L}0-9-]+(\\\\.[\\\\p{L}0-9-]+)*(\\\\.[\\\\p{L}]{2,})$";
+        return Pattern.matches(EMAIL_PATTERN, email);
     }
 }

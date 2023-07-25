@@ -56,7 +56,7 @@ public class ManageShopsApplication {
 		String encodedPassword = bc.encode("admin");
 		Account account = new Account(1L, "admin", encodedPassword);
 		accountRepo.save(account);
-	    User user = new User(1L, 0, 1L, "admin", 20, "admin@gmail.com", "012345678910", "vietnam");
+	    User user = new User(1L, 0, 1L, "admin", 20, "admin@gmail.com", "0000000000", "vietnam");
 		userRepo.save(user);
 		Role role = new Role(1, "ADMIN");
 		roleRepo.save(role);

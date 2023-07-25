@@ -34,6 +34,6 @@ public class Order {
     private long idProduct;
 
     @NotNull(message = "quantity must other null")
-    @Min(value = 1, message = "quantity must be greater than 1")
+    @Min(value = 1, message = "quantity must be large or equal 1")
     private float quantity;
 }

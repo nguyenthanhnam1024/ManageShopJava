@@ -42,13 +42,17 @@ public class ShopServiceImp implements ShopService {
         commons.validateRoleForADMIN(httpServletRequest);
         Optional<Shop> shopExist = shopRepo.findByName(shop.getName());
         if (!shopExist.isPresent()) {
+            Optional<Shop> shopOptional = shopRepo.findByHotline(shop.getHotline());
+            if (shopOptional.isPresent()) {
+                throw new MyValidateException("hotline already exist");
+            }
             try {
                 return shopRepo.save(shop);
             } catch (Exception ex) {
                 throw new MyValidateException("create shop failure");
             }
         }
-        throw new MyValidateException("shop have been exist");
+        throw new MyValidateException("shop name already exist");
     }
 
     @Override
@@ -60,6 +64,12 @@ public class ShopServiceImp implements ShopService {
                 Optional<Shop> shopOptional = shopRepo.findByName(shop.getName());
                 if (shopOptional.isPresent()) {
                     throw new MyValidateException("shop already exist");
+                }
+            }
+            if (!shop.getHotline().equals(shopExist.get().getHotline())) {
+                Optional<Shop> shopOptional = shopRepo.findByHotline(shop.getHotline());
+                if (shopOptional.isPresent()) {
+                    throw new MyValidateException("hotline already exist");
                 }
             }
             try {

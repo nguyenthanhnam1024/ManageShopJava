@@ -20,7 +20,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "name product must other null")
+    @NotNull(message = "name product must other null")
     private String name;
 
     @NotNull(message = "shop must other null")
@@ -33,7 +33,7 @@ public class Product {
     @Size(max = 1000, message = "described must be less 1000 keyword")
     private String described;
 
-    @NotNull(message = "dataOfManufacture must other null")
+    @NotNull(message = "date of manufacture must other null")
     @PastOrPresent(message = "date must be present or past")
     private LocalDate dateOfManufacture;
 
@@ -42,6 +42,6 @@ public class Product {
     private LocalDate expiry;
 
     @NotNull(message = "origin must other null")
-    @Size(min = 2, max = 50, message = "2 keyword < origin < 51 keyword")
+    @Size(min = 2, max = 50, message = "origin must from 2 to 51 keyword")
     private String origin;
 }

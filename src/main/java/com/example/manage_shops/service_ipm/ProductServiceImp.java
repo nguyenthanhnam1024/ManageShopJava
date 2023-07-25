@@ -38,7 +38,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product getProductById(HttpServletRequest httpServletRequest, Long idProduct, int idShop) throws MyValidateException {
-        commons.validateRole(httpServletRequest,Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName()));
+        commons.validateRole(httpServletRequest,Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName(), RoleEnum.STAFF.getRoleName()));
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
         Optional<Product> productOptional = productRepo.findById(idProduct);
         if (productOptional.isPresent()) {
@@ -50,11 +50,11 @@ public class ProductServiceImp implements ProductService {
     @Override
     @Transactional
     public Product saveProduct(HttpServletRequest httpServletRequest, int idShop, Product product) throws MyValidateException {
-        commons.validateRole(httpServletRequest,Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName()));
+        commons.validateRole(httpServletRequest,Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName(), RoleEnum.STAFF.getRoleName()));
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
-        Product productExist = productRepo.findProductByName(product.getName());
-        if (productExist != null) {
-            throw  new MyValidateException("shop have been product '"+productExist.getName()+"'");
+        Optional<Product> productExist = productRepo.findByNameAndIdShop(product.getName(), product.getIdShop());
+        if (productExist.isPresent() && product.getId() == 0) {
+            throw  new MyValidateException("shop have been product '"+productExist.get().getName()+"'");
         }
         return productRepo.save(product);
     }
@@ -62,19 +62,19 @@ public class ProductServiceImp implements ProductService {
     @Override
     @Transactional
     public Product updateProduct(HttpServletRequest httpServletRequest, int idShop, Product product) throws MyValidateException {
-        commons.validateRole(httpServletRequest,Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName()));
+        commons.validateRole(httpServletRequest,Arrays.asList(RoleEnum.ADMIN.getRoleName(), RoleEnum.MANAGE.getRoleName(), RoleEnum.STAFF.getRoleName()));
         commons.validateShopForUserToQuery(idShop, extractDataFromJwt.extractIdShopFromJwt(httpServletRequest));
-        Optional<Product> productOptional = productRepo.findById(product.getId());
+        Optional<Product> productOptional = productRepo.findByIdAndIdShop(product.getId(), product.getIdShop());
         if (productOptional.isPresent()) {
             if (!productOptional.get().getName().equals(product.getName())) {
                 Optional<Product> optionalProduct = productRepo.findByName(product.getName());
                 if (optionalProduct.isPresent()) {
-                    throw new MyValidateException("product already exists");
+                    throw new MyValidateException("product already exist");
                 }
             }
             return productRepo.save(product);
         }
-        throw new MyValidateException("update product failure");
+        throw new MyValidateException("product no exists for update");
     }
 
     @Override
